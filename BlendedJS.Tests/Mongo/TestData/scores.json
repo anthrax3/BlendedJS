@@ -1,0 +1,41 @@
+﻿{
+  "_id": 6305,
+  "name": "A. MacDyver",
+  "assignment": 5,
+  "points": 24
+}
+
+{
+  _id: 6308,
+  name: "B. Batlock",
+  "assignment": 3,
+  "points": 22
+}
+
+{
+  _id: 6312,
+  name: "M. Tagnum",
+  "assignment": 5,
+  "points": 30
+}
+
+{
+  _id: 6319,
+  name: "R. Stiles",
+  "assignment": 2,
+  "points": 12
+}
+
+{
+  _id: 6322,
+  name: "A. MacDyver",
+  "assignment": 2,
+  "points": 14
+}
+
+{
+  _id: 6234,
+  name: "R. Stiles",
+  "assignment": 1,
+  "points": 10
+}

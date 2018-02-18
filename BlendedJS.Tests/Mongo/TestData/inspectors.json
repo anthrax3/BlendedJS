@@ -1,0 +1,27 @@
+﻿{
+  "_id": 92412,
+  "inspector": "F. Drebin",
+  "Sector": 1,
+  "Patrolling": true
+}
+
+{
+  "_id": 92413,
+  "inspector": "J. Clouseau",
+  "Sector": 2,
+  "Patrolling": false
+}
+
+{
+  "_id": 92414,
+  "inspector": "J. Clouseau",
+  "Sector": 3,
+  "Patrolling": true
+}
+
+{
+  "_id": 92415,
+  "inspector": "R. Coltrane",
+  "Sector": 3,
+  "Patrolling": false
+}

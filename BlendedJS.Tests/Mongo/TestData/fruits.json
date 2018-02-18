@@ -1,0 +1,22 @@
+﻿{
+  '_id': 'apples',
+  'qty': 5
+}
+
+{
+  '_id': 'bananas',
+  'qty': 7
+}
+
+{
+  '_id': 'oranges',
+  'qty': {
+    'in stock': 8,
+    'ordered': 12
+  }
+}
+
+{
+  "_id": "avocados",
+  "qty": "fourteen"
+}
