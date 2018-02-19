@@ -1,10 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using BlendedJS.Mongo.Tests;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BlendedJS.Mongo.Tests
+namespace BlendedJS.Tests.Mongo
 {
     [TestClass]
     public class FindOneAndDeleteTests
@@ -15,9 +13,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("scores", "TestData/scores.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     db.scores.findOneAndDelete(
                        { ""name"" : ""M. Tagnum"" }
                     )
@@ -33,9 +32,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("scores", "TestData/scores.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     db.scores.findOneAndDelete(
                        { ""name"" : ""A. MacDyver"" },
                        { sort: { ""points"" : 1 } }
@@ -52,9 +52,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("scores", "TestData/scores.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     db.scores.findOneAndDelete(
                        { ""name"" : ""A. MacDyver"" },
                        { sort: { ""points"" : 1 }, projection: { ""assignment"" : 1 } }

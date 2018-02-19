@@ -1,13 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MongoDB.Bson;
-using System;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Generic;
-using System.Text;
-using BlendedJS.Mongo;
 using BlendedJS.Mongo.Tests;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BlendedJS.Tests.Mongodb
+namespace BlendedJS.Tests.Mongo
 {
     [TestClass]
     public class MapReduceTests
@@ -18,9 +14,10 @@ namespace BlendedJS.Tests.Mongodb
             TestData.Prepare("orders", "TestData/orders.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     var mapFunction1 = 'function() { emit(this.cust_id, this.price); }';
                     var reduceFunction1 = 'function(keyCustId, valuesPrices) { return Array.sum(valuesPrices); }';
                     db.orders.mapReduce(

@@ -1,9 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MongoDB.Bson;
-using System.Linq;
-using System.Collections.Generic;
+﻿using BlendedJS.Mongo.Tests;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BlendedJS.Mongo.Tests
+namespace BlendedJS.Tests.Mongo
 {
     [TestClass]
     public class DeleteManyTests
@@ -14,9 +12,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("orders", "TestData/orders.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"try {
-                       var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                       var db = new MongoClient(this.mongoConnectionString);
                        db.orders.deleteMany( { ""amount"" :25 } );
                     } catch (e) {
                        print(e);
@@ -33,9 +32,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("orders", "TestData/orders.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                var db = new MongoClient(this.mongoConnectionString);
                 db.orders.deleteMany(
                     { ""cust_id"" : ""abc1"" },
                     { w: ""majority"", wtimeout: 10 });");

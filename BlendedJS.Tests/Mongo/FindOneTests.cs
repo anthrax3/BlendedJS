@@ -1,9 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using BlendedJS.Mongo.Tests;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Bson;
-using System.Linq;
-using System.Collections.Generic;
 
-namespace BlendedJS.Mongo.Tests
+namespace BlendedJS.Tests.Mongo
 {
     [TestClass]
     public class FindOneTests
@@ -14,9 +13,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     db.bios.findOne()
                 ");
             var firstDocument = (BsonDocument)results.Value;
@@ -30,9 +30,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     db.bios.findOne(
                        {
                          $or: [
@@ -54,9 +55,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     db.bios.findOne(
                         { },
                         { name: 1, contribs: 1 }
@@ -74,9 +76,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     db.bios.findOne(
                        { contribs: 'OOP' },
                        { _id: 0, 'name.first': 0, birth: 0 }
@@ -94,9 +97,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     var myDocument = db.bios.findOne();
 
                     if (myDocument) {

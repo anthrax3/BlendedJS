@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using BlendedJS.Mongo;
+using BlendedJS.Mongo.Tests;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BlendedJS.Mongo.Tests
+namespace BlendedJS.Tests.Mongo
 {
     [TestClass]
     public class UpdateManyTests
@@ -15,9 +15,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("restaurant", "TestData/restaurant2.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                    db.restaurant.updateMany(
                       { violations: { $gt: 4 } },
                       { $set: { ""Review"" : true } }
@@ -36,9 +37,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("restaurant", "TestData/restaurant2.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                    db.restaurant.updateMany(
                       { violations: { $gt: 100 } },
                       { $set: { ""Review"" : true } }
@@ -57,9 +59,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("inspectors", "TestData/inspectors.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     db.inspectors.updateMany(
                       { ""Sector"" : { $gt : 4 }, ""inspector"" : ""R.Coltrane"" },
                       { $set: { ""Patrolling"" : false } },

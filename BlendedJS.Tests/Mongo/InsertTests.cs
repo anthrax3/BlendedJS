@@ -1,10 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using BlendedJS.Mongo;
+using BlendedJS.Mongo.Tests;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BlendedJS.Mongo.Tests
+namespace BlendedJS.Tests.Mongo
 {
     [TestClass]
     public class InsertTests
@@ -15,9 +13,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("products", "TestData/products.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     db.products.insert( { _id: 10, item: ""box"", qty: 20 } )
                 ");
 
@@ -32,9 +31,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("products", "TestData/products.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     db.products.insert(
                        [
                          { _id: 11, item: ""pencil"", qty: 50, type: ""no.2"" },
@@ -55,9 +55,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("products", "TestData/products.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     db.products.insert(
                         [
                             { _id: 20, item: ""lamp"", qty: 50, type: ""desk"" },

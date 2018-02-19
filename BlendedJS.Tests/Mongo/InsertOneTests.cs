@@ -1,10 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using BlendedJS.Mongo;
+using BlendedJS.Mongo.Tests;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BlendedJS.Mongo.Tests
+namespace BlendedJS.Tests.Mongo
 {
 
     [TestClass]
@@ -16,9 +14,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("products", "TestData/products.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     db.products.insertOne( { item: ""card"", qty: 15 } );
                 ");
 
@@ -33,9 +32,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("products", "TestData/products.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     db.products.insertOne( { _id: 10, item: ""box"", qty: 20 } );
                 ");
 
@@ -50,10 +50,11 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("products", "TestData/products.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     try {
-                        var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                        var db = new MongoClient(this.mongoConnectionString);
                         db.products.insertOne( { _id: 101, ""item"" : ""packing peanuts"", ""qty"" : 200 } );
                     } catch (e) {
                        print(e);

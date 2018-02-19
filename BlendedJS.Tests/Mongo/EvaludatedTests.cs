@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+using BlendedJS.Mongo;
+using BlendedJS.Mongo.Tests;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Bson;
-using System.Linq;
-using System.Collections.Generic;
 
-
-namespace BlendedJS.Mongo.Tests
+namespace BlendedJS.Tests.Mongo
 {
     [TestClass]
     public class EvaludatedTests
@@ -15,9 +15,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("orders", "TestData/orders.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                var db = new MongoClient(this.mongoConnectionString);
                 db.orders.aggregate([
                      { $match: { status: ""A"" } },
                      { $group: { _id: ""$cust_id"", total: { $sum: ""$amount"" } } },
@@ -34,9 +35,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("orders", "TestData/orders.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                var db = new MongoClient(this.mongoConnectionString);
                 db.orders.aggregate(
                     [
                         { $project : { cusip: 1, date: 1, price: 1, _id: 0 } },
@@ -56,9 +58,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("orders", "TestData/orders.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     db.orders.aggregate(
                         [
                         { $match: { status: ""A"" } },

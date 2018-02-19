@@ -1,9 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using BlendedJS.Mongo;
+using BlendedJS.Mongo.Tests;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BlendedJS.Mongo.Tests
+namespace BlendedJS.Tests.Mongo
 {
     [TestClass]
     public class ReplaceOneTests
@@ -14,9 +14,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("restaurant", "TestData/restaurant.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     db.restaurant.replaceOne(
                       { ""name"" : ""Central Perk Cafe"" },
                       { ""name"" : ""Central Pork Cafe"", ""Borough"" : ""Manhattan"" }
@@ -35,9 +36,10 @@ namespace BlendedJS.Mongo.Tests
             TestData.Prepare("restaurant", "TestData/restaurant.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
-                    var db = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+                    var db = new MongoClient(this.mongoConnectionString);
                     db.restaurant.replaceOne(
                       { ""name"" : ""Pizza Rat's Pizzaria"" },
                       { ""_id"": 4, ""name"" : ""Pizza Rat's Pizzaria"", ""Borough"" : ""Manhattan"", ""violations"" : 8 },

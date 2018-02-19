@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BlendedJS.Mongo
+namespace BlendedJS
 {
     public class BlendedJSResult
     {
