@@ -93,7 +93,6 @@ namespace BlendedJS.Mongo
             var isUpsert = options.GetProperty("isUpsert").ToBoolOrDefault();
             if (isUpsert.HasValue)
                 findAndReplaceOptions.IsUpsert = isUpsert.Value;
-            
             return this._collection.FindOneAndReplace(filter.ToBsonDocument(), replacment.ToBsonDocument());
         }
 
@@ -177,7 +176,7 @@ namespace BlendedJS.Mongo
         {
             UpdateOptions updateOptions = new UpdateOptions();
 
-            bool? upsert = options.GetProperty("upsert")?.ToBoolOrDefault();
+            bool? upsert = options.GetProperty("upsert").ToBoolOrDefault();
             if (upsert.HasValue)
                 updateOptions.IsUpsert = upsert.Value;
 
@@ -196,7 +195,7 @@ namespace BlendedJS.Mongo
             if (bsonDocument.FirstOrDefault().Name.StartsWith("$") == false) // is replace
                 return replaceOne(filter, document, options);
 
-            bool? multi = options.GetProperty("multi")?.ToBoolOrDefault();
+            bool? multi = options.GetProperty("multi").ToBoolOrDefault();
             if (multi.HasValue && multi.Value)
                 return updateMany(filter, document, options);
             else
@@ -212,7 +211,7 @@ namespace BlendedJS.Mongo
         {
             UpdateOptions updateOptions = new UpdateOptions();
 
-            bool? upsert = options.GetProperty("upsert")?.ToBoolOrDefault();
+            bool? upsert = options.GetProperty("upsert").ToBoolOrDefault();
             if (upsert.HasValue)
                 updateOptions.IsUpsert = upsert.Value;
 
@@ -257,7 +256,7 @@ namespace BlendedJS.Mongo
         }
         public object remove(object filter, object options)
         {
-            bool? justOne = options.GetProperty("justOne")?.ToBoolOrDefault();
+            bool? justOne = options.GetProperty("justOne").ToBoolOrDefault();
             if (justOne.HasValue && justOne.Value)
                 return deleteOne(filter, options);
             else
@@ -310,15 +309,15 @@ namespace BlendedJS.Mongo
             //aggregateOptions.ex
             
 
-            bool? allowDiskUse = options.GetProperty("allowDiskUse")?.ToBoolOrDefault();
+            bool? allowDiskUse = options.GetProperty("allowDiskUse").ToBoolOrDefault();
             if (allowDiskUse.HasValue)
                 aggregateOptions.AllowDiskUse = allowDiskUse.Value;
 
-            bool? bypassDocumentValidation = options.GetProperty("bypassDocumentValidation")?.ToBoolOrDefault();
+            bool? bypassDocumentValidation = options.GetProperty("bypassDocumentValidation").ToBoolOrDefault();
             if (bypassDocumentValidation.HasValue)
                 aggregateOptions.BypassDocumentValidation = bypassDocumentValidation.Value;
 
-            int? batchSize = options.GetProperty("cursor")?.GetProperty("batchSize")?.ToIntOrDefault();
+            int? batchSize = options.GetProperty("cursor").GetProperty("batchSize").ToIntOrDefault();
             if (batchSize.HasValue)
             {
                 aggregateOptions.UseCursor = true;

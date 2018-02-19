@@ -1,6 +1,5 @@
 ﻿using Jint;
 using MongoDB.Bson;
-using System.Collections.Generic;
 using System.Dynamic;
 using Jint.Runtime.Interop;
 using System;
@@ -60,16 +59,5 @@ namespace BlendedJS.Mongo
             result.Output = console.Logs;
             return result;
         }
-    }
-
-    public class BlendedJSResult
-    {
-        public BlendedJSResult()
-        {
-            Output = new List<Log>();
-        }
-
-        public List<Log> Output { get; set; }
-        public object Value { get; set; }
     }
 }
