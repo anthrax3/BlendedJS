@@ -1,11 +1,10 @@
-﻿using MongoDB.Bson;
-using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
-namespace BlendedJS.Mongo.Tests
+namespace BlendedJS.Tests.Mongo.TestData
 {
     public class TestData
     {

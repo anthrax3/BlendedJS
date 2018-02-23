@@ -1,5 +1,4 @@
-﻿using BlendedJS.Mongo.Tests;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Bson;
 
 namespace BlendedJS.Tests.Mongo
@@ -10,10 +9,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void FindOneAndDelete_DeleteDocument()
         {
-            TestData.Prepare("scores", "TestData/scores.json");
+            TestData.TestData.Prepare("scores", "TestData/scores.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -29,10 +28,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void FindOneAndDelete_SortAndDeleteDocument()
         {
-            TestData.Prepare("scores", "TestData/scores.json");
+            TestData.TestData.Prepare("scores", "TestData/scores.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -49,10 +48,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void FindOneAndDelete_ProjectingDeletedDocument()
         {
-            TestData.Prepare("scores", "TestData/scores.json");
+            TestData.TestData.Prepare("scores", "TestData/scores.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);

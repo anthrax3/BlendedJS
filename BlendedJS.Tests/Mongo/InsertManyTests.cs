@@ -1,5 +1,4 @@
 ﻿using BlendedJS.Mongo;
-using BlendedJS.Mongo.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BlendedJS.Tests.Mongo
@@ -10,10 +9,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void InsertMany_ReturnGeneratedIds()
         {
-            TestData.Prepare("products", "TestData/products.json");
+            TestData.TestData.Prepare("products", "TestData/products.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -32,10 +31,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void InsertMany_WithIds()
         {
-            TestData.Prepare("products", "TestData/products.json");
+            TestData.TestData.Prepare("products", "TestData/products.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -54,10 +53,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void InsertMany_DuplicatedId()
         {
-            TestData.Prepare("products", "TestData/products.json");
+            TestData.TestData.Prepare("products", "TestData/products.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     try {
@@ -72,7 +71,7 @@ namespace BlendedJS.Tests.Mongo
                     }
                 ");
 
-            Assert.IsTrue(results.Output[0].Message.Contains("duplicate key error index"));
+            Assert.IsTrue(results.Console[0].Message.Contains("duplicate key error index"));
         }
     }
 }

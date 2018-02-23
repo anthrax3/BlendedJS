@@ -9,9 +9,9 @@ namespace BlendedJS.Mongo
 {
     public class Cursor : IEnumerable<BsonDocument>
     {
-        private IConsole _console;
+        private Console _console;
         private IFindFluent<BsonDocument, BsonDocument> _documents;
-        public Cursor(IFindFluent<BsonDocument, BsonDocument> documents, IConsole console)
+        public Cursor(IFindFluent<BsonDocument, BsonDocument> documents, Console console)
         {
             _console = console;
             _documents = documents;

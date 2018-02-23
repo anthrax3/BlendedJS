@@ -1,6 +1,5 @@
 ﻿using System;
 using BlendedJS.Mongo;
-using BlendedJS.Mongo.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BlendedJS.Tests.Mongo
@@ -11,10 +10,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void ReplaceOne_SetOneField()
         {
-            TestData.Prepare("restaurant", "TestData/restaurant.json");
+            TestData.TestData.Prepare("restaurant", "TestData/restaurant.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -33,10 +32,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void ReplaceOne_Upsert()
         {
-            TestData.Prepare("restaurant", "TestData/restaurant.json");
+            TestData.TestData.Prepare("restaurant", "TestData/restaurant.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);

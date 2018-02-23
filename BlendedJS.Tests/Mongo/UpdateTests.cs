@@ -1,6 +1,5 @@
 ﻿using System;
 using BlendedJS.Mongo;
-using BlendedJS.Mongo.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Bson;
 
@@ -12,10 +11,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Update_SpecificFields()
         {
-            TestData.Prepare("books", "TestData/books.json");
+            TestData.TestData.Prepare("books", "TestData/books.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -43,10 +42,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Update_ReplaceDocument()
         {
-            TestData.Prepare("books", "TestData/books.json");
+            TestData.TestData.Prepare("books", "TestData/books.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -71,10 +70,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Update_Upsert()
         {
-            TestData.Prepare("books", "TestData/books.json");
+            TestData.TestData.Prepare("books", "TestData/books.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -100,10 +99,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Update_Multi()
         {
-            TestData.Prepare("books", "TestData/books.json");
+            TestData.TestData.Prepare("books", "TestData/books.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -124,10 +123,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Update_UpsertMulti()
         {
-            TestData.Prepare("books", "TestData/books.json");
+            TestData.TestData.Prepare("books", "TestData/books.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);

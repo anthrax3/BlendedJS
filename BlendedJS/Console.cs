@@ -5,34 +5,26 @@ using System.Threading.Tasks;
 
 namespace BlendedJS
 {
-    public interface IConsole
+    public class Console : Dictionary<string,object>
     {
-        void Log(object message);
-        void Log(object message, object json);
-        List<Log> Logs { get; }
-        int CurrentLine { get; set; }
-    }
-
-    public class Console : IConsole
-    {
-        public int CurrentLine { get; set; }
-        public List<Log> Logs { get; private set; }
+        public int currentLine { get; set; }
+        public List<Log> logs { get; private set; }
 
         public Console()
         {
-            Logs = new List<Log>();
+            logs = new List<Log>();
         }
 
-        public void Log(object arg1)
+        public void log(object arg1)
         {
-            Log(arg1, null);
+            log(arg1, null);
         }
 
-        public void Log(object arg1, object arg2)
+        public void log(object arg1, object arg2)
         {
-            Logs.Add(new Log()
+            logs.Add(new Log()
             {
-                Line = CurrentLine,
+                Line = currentLine,
                 Message = arg1.ToJsonOrString(),
                 Json = arg2.ToJsonOrString()
             });

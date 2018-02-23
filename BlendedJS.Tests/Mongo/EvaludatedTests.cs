@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using BlendedJS.Mongo;
-using BlendedJS.Mongo.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Bson;
 
@@ -12,10 +11,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Count_CountAllDocumentsInCollection()
         {
-            TestData.Prepare("orders", "TestData/orders.json");
+            TestData.TestData.Prepare("orders", "TestData/orders.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                 var db = new MongoClient(this.mongoConnectionString);
@@ -32,10 +31,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Aggregate_PerformLargeSortOperationWithExternalSor()
         {
-            TestData.Prepare("orders", "TestData/orders.json");
+            TestData.TestData.Prepare("orders", "TestData/orders.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                 var db = new MongoClient(this.mongoConnectionString);
@@ -55,10 +54,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Aggregate_SpecifyInitialBatchSize()
         {
-            TestData.Prepare("orders", "TestData/orders.json");
+            TestData.TestData.Prepare("orders", "TestData/orders.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BlendedJS.Mongo.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Bson;
 
@@ -12,10 +11,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Find_SimpleQuery_ReturnList()
         {
-            TestData.Prepare("collection", "TestData/fruits.json");
+            TestData.TestData.Prepare("collection", "TestData/fruits.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -29,10 +28,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Find_ReturnAllDocuments()
         {
-            TestData.Prepare("bios", "TestData/bios.json");
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -46,10 +45,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Find_ByIntId_ReturnsOneDocument()
         {
-            TestData.Prepare("bios", "TestData/bios.json");
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -63,10 +62,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Find_ByObjectId_ReturnsOneDocument()
         {
-            TestData.Prepare("bios", "TestData/bios.json");
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -79,10 +78,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Find_In_ByIntIdAndObjectId_ReturnsOneDocument()
         {
-            TestData.Prepare("bios", "TestData/bios.json");
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -96,10 +95,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Find_FieldContainAnArray()
         {
-            TestData.Prepare("students", "TestData/students.json");
+            TestData.TestData.Prepare("students", "TestData/students.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -113,10 +112,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Find_ArrayOfDocuments()
         {
-            TestData.Prepare("bios", "TestData/bios.json");
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -139,10 +138,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Find_ExactMatchesOnEmbeddedDocuments()
         {
-            TestData.Prepare("bios", "TestData/bios.json");
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -163,10 +162,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Find_FieldsOfAnEmbeddedDocument()
         {
-            TestData.Prepare("bios", "TestData/bios.json");
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -185,10 +184,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Find_Projection_Exclude_idField()
         {
-            TestData.Prepare("bios", "TestData/bios.json");
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -211,10 +210,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Find_IterateTheReturnedCursor()
         {
-            TestData.Prepare("bios", "TestData/bios.json");
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -228,17 +227,17 @@ namespace BlendedJS.Tests.Mongo
                     }
                 ");
 
-            Assert.AreEqual(1, results.Output.Count);
-            Assert.AreEqual("{ \"first\" : \"John\", \"last\" : \"Backus\" }", results.Output[0].Message);
+            Assert.AreEqual(1, results.Console.Count);
+            Assert.AreEqual("{ \"first\" : \"John\", \"last\" : \"Backus\" }", results.Console[0].Message);
         }
 
         [TestMethod]
         public void Find_ForEachTheReturnedCursor()
         {
-            TestData.Prepare("bios", "TestData/bios.json");
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -247,16 +246,16 @@ namespace BlendedJS.Tests.Mongo
                     myCursor.forEach(printjson);
                 ");
 
-            Assert.AreEqual(10, results.Output.Count);
+            Assert.AreEqual(10, results.Console.Count);
         }
 
         [TestMethod]
         public void Find_Sort()
         {
-            TestData.Prepare("bios", "TestData/bios.json");
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -272,10 +271,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Find_Limit()
         {
-            TestData.Prepare("bios", "TestData/bios.json");
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -289,10 +288,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Find_Skip()
         {
-            TestData.Prepare("bios", "TestData/bios.json");
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -306,10 +305,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Find_Collation()
         {
-            TestData.Prepare("bios", "TestData/bios.json");
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
@@ -323,10 +322,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Find_LimiAndSort()
         {
-            TestData.Prepare("bios", "TestData/bios.json");
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                     var db = new MongoClient(this.mongoConnectionString);

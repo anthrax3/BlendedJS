@@ -20,7 +20,9 @@ namespace BlendedJS.Sql
                 connection = new SqlConnection();
             if (provider.SafeEquals("Npgsql"))
                 connection = new NpgsqlConnection();
-            
+
+            //oracle: http://www.oracle.com/technetwork/topics/dotnet/downloads/odpnetcorebeta-4077982.html
+
             if (connection != null)
                 connection.ConnectionString = connectionString;
             return connection;

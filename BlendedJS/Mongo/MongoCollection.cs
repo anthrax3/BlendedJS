@@ -14,9 +14,9 @@ namespace BlendedJS.Mongo
     {
         private string _name;
         private IMongoCollection<BsonDocument> _collection;
-        private IConsole _console;
+        private Console _console;
 
-        public MongoCollection(string name, IMongoCollection<BsonDocument> collection, IConsole console)
+        public MongoCollection(string name, IMongoCollection<BsonDocument> collection, Console console)
         {
             _collection = collection;
             _console = console;

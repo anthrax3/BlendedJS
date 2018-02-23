@@ -43,6 +43,19 @@ namespace BlendedJS.Tests.Http
         }
 
         [TestMethod]
+        public void Get_Json_BySpecifyingJustUrl()
+        {
+            BlendedJSEngine mongo = new BlendedJSEngine();
+            var result = mongo.ExecuteScript(
+                @"
+                    var httpClient = new HttpClient();
+                    var response = httpClient.get('https://jsonplaceholder.typicode.com/posts');
+                    JSON.parse(response.body);
+                ").Value as object[];
+            Assert.AreEqual((double)1, result[0].GetProperty("userId"));
+        }
+
+        [TestMethod]
         public void Post_Json()
         {
             BlendedJSEngine mongo = new BlendedJSEngine();
@@ -90,6 +103,37 @@ namespace BlendedJS.Tests.Http
             Assert.AreEqual(200, result.statusCode);
             Assert.AreEqual("OK", result.reasonPhrase);
             Assert.AreEqual("{}", result.body);
+        }
+
+        [TestMethod]
+        public void Get_UrlIsInvalid_ThrowError()
+        {
+            BlendedJSEngine mongo = new BlendedJSEngine();
+            var result = mongo.ExecuteScript(
+                @"
+                    try {
+                        var httpClient = new HttpClient();
+                        httpClient.get('asdf://asdf');
+                    }catch(err) {
+                        console.log(err);
+                    }
+                ");
+            Assert.IsTrue(result.ConsoleTest.Contains("Only 'http' and 'https' schemes are allowed"));
+        }
+
+        [TestMethod]
+        public void Get_404()
+        {
+            BlendedJSEngine mongo = new BlendedJSEngine();
+            var result = mongo.ExecuteScript(
+                @"
+                    var httpClient = new HttpClient();
+                    httpClient.get('http://example.com/asdf/asdf/asfd');
+                ").Value as HttpResponse;
+            Assert.AreEqual(404, result.statusCode);
+            Assert.AreEqual("Not Found", result.reasonPhrase);
+
+
         }
     }
 }

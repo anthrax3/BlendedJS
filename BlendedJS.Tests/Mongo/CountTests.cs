@@ -1,5 +1,4 @@
 ﻿using System;
-using BlendedJS.Mongo.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BlendedJS.Tests.Mongo
@@ -10,10 +9,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Count_CountAllDocumentsInCollection()
         {
-            TestData.Prepare("bios", "TestData/bios.json");
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                 var db = new MongoClient(this.mongoConnectionString);
@@ -27,10 +26,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Count_CountAllDocumentsAfterFind()
         {
-            TestData.Prepare("bios", "TestData/bios.json");
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                 var db = new MongoClient(this.mongoConnectionString);
@@ -44,10 +43,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Count_CountAllDocumentsThatMatchQuery()
         {
-            TestData.Prepare("students", "TestData/students.json");
+            TestData.TestData.Prepare("students", "TestData/students.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                 var db = new MongoClient(this.mongoConnectionString);
@@ -62,10 +61,10 @@ namespace BlendedJS.Tests.Mongo
         [TestMethod]
         public void Count_CountAllDocumentsAfterFindWithFilter()
         {
-            TestData.Prepare("students", "TestData/students.json");
+            TestData.TestData.Prepare("students", "TestData/students.json");
 
             BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("mongoConnectionString", TestData.MongoConnectionString);
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
             var results = mongo.ExecuteScript(
                 @"
                 var db = new MongoClient(this.mongoConnectionString);
