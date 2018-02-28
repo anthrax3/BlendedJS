@@ -228,7 +228,7 @@ namespace BlendedJS.Tests.Mongo
                 ");
 
             Assert.AreEqual(1, results.Console.Count);
-            Assert.AreEqual("{ \"first\" : \"John\", \"last\" : \"Backus\" }", results.Console[0].Message);
+            Assert.AreEqual("{ \"first\" : \"John\", \"last\" : \"Backus\" }", results.Console[0].Arg1);
         }
 
         [TestMethod]

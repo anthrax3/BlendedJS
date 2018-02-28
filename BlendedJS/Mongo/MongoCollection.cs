@@ -414,7 +414,7 @@ namespace BlendedJS.Mongo
         public object dataSize()
         {
             return ((IDictionary<string, object>)stats(null))
-                .GetValueOrDefault("size")
+                .GetValueOrDefault2("size")
                 .ToIntOrDefault();
         }
 
@@ -460,20 +460,20 @@ namespace BlendedJS.Mongo
             if (outCollection is IDictionary<string,object>)
             {
                 var outDicionary = (IDictionary<string, object>)outCollection;
-                object inline = outDicionary.GetValueOrDefault("inline");
+                object inline = outDicionary.GetValueOrDefault2("inline");
                 if (inline != null)
                 {
                     mapReduceOptions.OutputOptions = MapReduceOutputOptions.Inline;
                 }
                 else
                 {
-                    string replaceAction = outDicionary.GetValueOrDefault("replace").ToStringOrDefault();
-                    string mergeAction = outDicionary.GetValueOrDefault("merge").ToStringOrDefault();
-                    string reduceAction = outDicionary.GetValueOrDefault("reduce").ToStringOrDefault();
+                    string replaceAction = outDicionary.GetValueOrDefault2("replace").ToStringOrDefault();
+                    string mergeAction = outDicionary.GetValueOrDefault2("merge").ToStringOrDefault();
+                    string reduceAction = outDicionary.GetValueOrDefault2("reduce").ToStringOrDefault();
 
-                    string db = outDicionary.GetValueOrDefault("db").ToStringOrDefault();
-                    bool? nonAtomic = outDicionary.GetValueOrDefault("nonAtomic").ToBoolOrDefault();
-                    bool? sharded = outDicionary.GetValueOrDefault("sharded").ToBoolOrDefault();
+                    string db = outDicionary.GetValueOrDefault2("db").ToStringOrDefault();
+                    bool? nonAtomic = outDicionary.GetValueOrDefault2("nonAtomic").ToBoolOrDefault();
+                    bool? sharded = outDicionary.GetValueOrDefault2("sharded").ToBoolOrDefault();
 
                     if (replaceAction != null)
                         mapReduceOptions.OutputOptions = MapReduceOutputOptions.Replace(replaceAction, db, sharded);

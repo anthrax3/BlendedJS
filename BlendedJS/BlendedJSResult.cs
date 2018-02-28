@@ -15,10 +15,11 @@ namespace BlendedJS
         public string ConsoleTest {
             get
             {
-                var lines = Console.Select(x => string.Format("{0}: {1}", x.Line, x.Message));
+                var lines = Console.Select(x => string.Format("{0}: {1}", x.Line, x.Arg1));
                 return string.Join(Environment.NewLine, lines);
             }
         }
         public object Value { get; set; }
+        public Exception Exception { get; internal set; }
     }
 }

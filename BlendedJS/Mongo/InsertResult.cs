@@ -8,17 +8,17 @@ namespace BlendedJS.Mongo
     {
         public object acknowledged
         {
-            get { return this.GetValueOrDefault("acknowledged"); }
+            get { return this.GetValueOrDefault2("acknowledged"); }
             set { this["acknowledged"] = value; }
         }
         public object insertedId
         {
-            get { return this.GetValueOrDefault("insertedId"); }
+            get { return this.GetValueOrDefault2("insertedId"); }
             set { this["insertedId"] = value; }
         }
         public object insertedIds
         {
-            get { return this.GetValueOrDefault("insertedIds"); }
+            get { return this.GetValueOrDefault2("insertedIds"); }
             set { this["insertedIds"] = value; }
         }
     }

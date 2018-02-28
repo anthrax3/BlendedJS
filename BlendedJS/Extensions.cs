@@ -39,14 +39,14 @@ namespace BlendedJS
             return stringOne.StartsWith(stringTwo, StringComparison.CurrentCultureIgnoreCase);
         }
 
-        public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
+        public static TValue GetValueOrDefault2<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
         {
             TValue value = default(TValue);
             dictionary.TryGetValue(key, out value);
             return value;
         }
 
-        public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue @default)
+        public static TValue GetValueOrDefault2<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue @default)
         {
             TValue value = default(TValue);
             if (dictionary.TryGetValue(key, out value))
@@ -191,16 +191,6 @@ namespace BlendedJS
                     return dictionary.First(x => x.Key.Equals(key)).Value;
             }
             return null;
-        }
-
-        public static List<T> Page<T>(this List<T> list, int page, int pageSize)
-        {
-            return list.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-        }
-
-        public static IQueryable<T> Page<T>(this IQueryable<T> items, int page, int pageSize)
-        {
-            return items.Skip((page - 1) * pageSize).Take(pageSize);
         }
     }
 }

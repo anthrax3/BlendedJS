@@ -15,25 +15,25 @@ namespace BlendedJS.Mongo
 
         public object acknowledged
         {
-            get { return this.GetValueOrDefault("acknowledged"); }
+            get { return this.GetValueOrDefault2("acknowledged"); }
             set { this["acknowledged"] = value; }
         }
 
         public object modifiedCount
         {
-            get { return this.GetValueOrDefault("modifiedCount"); }
+            get { return this.GetValueOrDefault2("modifiedCount"); }
             set { this["modifiedCount"] = value; }
         }
 
         public object matchedCount
         {
-            get { return this.GetValueOrDefault("matchedCount"); }
+            get { return this.GetValueOrDefault2("matchedCount"); }
             set { this["matchedCount"] = value; }
         }
 
         public object upsertedId
         {
-            get { return this.GetValueOrDefault("upsertedId"); }
+            get { return this.GetValueOrDefault2("upsertedId"); }
             set { this["upsertedId"] = value; }
         }
     }

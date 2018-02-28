@@ -48,6 +48,7 @@ namespace BlendedJS
             }));
         }
 
+    
         public BlendedJSResult ExecuteScript(string script)
         {
             Console = new Console();
@@ -61,6 +62,7 @@ namespace BlendedJS
             catch (Exception ex)
             {
                 Console.log("ERROR: " + ex.Message);
+                result.Exception = ex;
             }
             result.Console = Console.logs;
             return result;

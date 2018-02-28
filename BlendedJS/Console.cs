@@ -25,8 +25,8 @@ namespace BlendedJS
             logs.Add(new Log()
             {
                 Line = currentLine,
-                Message = arg1.ToJsonOrString(),
-                Json = arg2.ToJsonOrString()
+                Arg1 = arg1.ToJsonOrString(),
+                Arg2 = arg2.ToJsonOrString()
             });
         }
     }
@@ -34,7 +34,7 @@ namespace BlendedJS
     public class Log
     {
         public int Line { get; set; }
-        public string Message { get; set; }
-        public object Json { get; set; }
+        public object Arg1 { get; set; }
+        public object Arg2 { get; set; }
     }
 }
