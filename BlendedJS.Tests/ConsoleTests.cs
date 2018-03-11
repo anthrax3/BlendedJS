@@ -12,8 +12,8 @@ namespace BlendedJS.Tests
         [TestMethod]
         public void Log_String()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     log('bla bla bla');
                 ");
@@ -23,8 +23,8 @@ namespace BlendedJS.Tests
         [TestMethod]
         public void ConsoleLog_String()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     console.log('bla bla bla');
                 ");
@@ -34,8 +34,8 @@ namespace BlendedJS.Tests
         [TestMethod]
         public void ConsoleLog_SumOfNumber()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     console.log(2 + 2);
                 ");
@@ -45,8 +45,8 @@ namespace BlendedJS.Tests
         [TestMethod]
         public void ConsoleLog_Object()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     var obj = {id:1, 'name':'dan'};
                     console.log(obj);
@@ -55,10 +55,34 @@ namespace BlendedJS.Tests
         }
 
         [TestMethod]
+        public void ConsoleLog_StringPlusJsObject()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
+                @"
+                    var obj = {id:1, 'name':'dan'};
+                    console.log('text ' + obj);
+                ");
+            Assert.AreEqual("3: text [object Object]", result.ConsoleTest);
+        }
+
+        [TestMethod]
+        public void ConsoleLog_StringPlusCsObject()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
+                @"
+                    var obj = HttpClient();
+                    console.log('text ' + obj);
+                ");
+            Assert.AreEqual("3: text [object HttpClient]", result.ConsoleTest);
+        }
+
+        [TestMethod]
         public void ConsoleLog_CatchedJsError()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     try {
                         doSomeJob();
@@ -73,9 +97,9 @@ namespace BlendedJS.Tests
         [TestMethod]
         public void ConsoleLog_CatchedNetError()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("doSomeJob", new Action<object>(x => throw new Exception("bla bla bla")));
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            engine.Jint.SetValue("doSomeJob", new Action<object>(x => throw new Exception("bla bla bla")));
+            var result = engine.ExecuteScript(
                 @"
                     try {
                         doSomeJob();
@@ -90,9 +114,9 @@ namespace BlendedJS.Tests
         [TestMethod]
         public void ConsoleLog_NotCatchedNetError()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            mongo.Jint.SetValue("doSomeJob", new Action<object>(x => throw new Exception("bla bla bla")));
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            engine.Jint.SetValue("doSomeJob", new Action<object>(x => throw new Exception("bla bla bla")));
+            var result = engine.ExecuteScript(
                 @"
                     doSomeJob();
                 ");

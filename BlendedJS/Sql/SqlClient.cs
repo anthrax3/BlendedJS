@@ -9,7 +9,7 @@ using Npgsql;
 
 namespace BlendedJS.Sql
 {
-    public class SqlClient : Dictionary<string, object>
+    public class SqlClient : BaseObject
     {
         private object _provider;
         private object _connectionString;
