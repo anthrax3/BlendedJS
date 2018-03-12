@@ -16,6 +16,7 @@ namespace BlendedJS.Sql
 
         public SqlClient(object options)
         {
+            BlendedJSEngine.Clients.Add(this);
             _provider = options.GetProperty("provider").ToStringOrDefault();
             _connectionString = options.GetProperty("connectionString").ToStringOrDefault();
         }

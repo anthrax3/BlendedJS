@@ -12,8 +12,8 @@ namespace BlendedJS.Tests.Sql
         [TestMethod]
         public void Query_CannotConnectToDb()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     try {
                         var sqlClient = new  SqlClient({provider:'SqlServer',connectionString:'Server=myServerAddress;Database=myDataBase;User Id=myUsername;Password=myPassword;'});
@@ -29,8 +29,8 @@ namespace BlendedJS.Tests.Sql
         [TestMethod]
         public void Query_SyntaxError()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     try {
                         var sqlClient = new  SqlClient({provider:'Sqlite',connectionString:'Data Source = chinook.db;'});
@@ -46,8 +46,8 @@ namespace BlendedJS.Tests.Sql
         [TestMethod]
         public void Query_SelectRows()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     var sqlClient = new  SqlClient({provider:'Sqlite',connectionString:'Data Source = chinook.db;'});
                     sqlClient.query('select * from employees');
@@ -59,8 +59,8 @@ namespace BlendedJS.Tests.Sql
         [TestMethod]
         public void Query_SelectWithParameters()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     var sqlClient = new  SqlClient({provider:'Sqlite',connectionString:'Data Source = chinook.db;'});
                     sqlClient.query({
@@ -75,8 +75,8 @@ namespace BlendedJS.Tests.Sql
         [TestMethod]
         public void Query_UpdateOneItem()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     var sqlClient = new  SqlClient({provider:'Sqlite',connectionString:'Data Source = chinook.db;'});
                     sqlClient.query('update employees set FirstName = ""Kowalski"" where EmployeeId=1');
@@ -88,8 +88,8 @@ namespace BlendedJS.Tests.Sql
         [TestMethod]
         public void Query_UpdateZeroItems()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     var sqlClient = new  SqlClient({provider:'Sqlite',connectionString:'Data Source = chinook.db;'});
                     sqlClient.query('update employees set FirstName = ""Kowalski"" where EmployeeId=123123');

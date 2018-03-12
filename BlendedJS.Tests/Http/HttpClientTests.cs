@@ -14,8 +14,8 @@ namespace BlendedJS.Tests.Http
         [TestMethod]
         public void Get_Website()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     var httpClient = new HttpClient();
                     httpClient.get({url:'https://www.theguardian.com'});
@@ -29,8 +29,8 @@ namespace BlendedJS.Tests.Http
         [TestMethod]
         public void Get_Json()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     var httpClient = new HttpClient();
                     var response = httpClient.get({
@@ -45,8 +45,8 @@ namespace BlendedJS.Tests.Http
         [TestMethod]
         public void Get_Json_BySpecifyingJustUrl()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     var httpClient = new HttpClient();
                     var response = httpClient.get('https://jsonplaceholder.typicode.com/posts');
@@ -58,8 +58,8 @@ namespace BlendedJS.Tests.Http
         [TestMethod]
         public void Post_Json()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     var httpClient = new HttpClient();
                     var response = httpClient.post({
@@ -75,8 +75,8 @@ namespace BlendedJS.Tests.Http
         [TestMethod]
         public void Put_Json()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     var httpClient = new HttpClient();
                     var response = httpClient.put({
@@ -92,8 +92,8 @@ namespace BlendedJS.Tests.Http
         [TestMethod]
         public void Delete_Json()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     var httpClient = new HttpClient();
                     httpClient.delete({
@@ -108,8 +108,8 @@ namespace BlendedJS.Tests.Http
         [TestMethod]
         public void Get_UrlIsInvalid_ThrowError()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     try {
                         var httpClient = new HttpClient();
@@ -124,8 +124,8 @@ namespace BlendedJS.Tests.Http
         [TestMethod]
         public void Get_404()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
                 @"
                     var httpClient = new HttpClient();
                     httpClient.get('http://example.com/asdf/asdf/asfd');

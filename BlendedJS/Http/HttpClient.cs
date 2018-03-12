@@ -13,6 +13,7 @@ namespace BlendedJS.Http
     {
         public HttpClient()
         {
+            BlendedJSEngine.Clients.Add(this);
         }
 
         public object get(object options)

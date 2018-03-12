@@ -1,39 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Text;
-using FluentFTP;
 
-namespace BlendedJS.Ftp
+namespace BlendedJS.Sftp
 {
-    public class FtpClient : Dictionary<string, object>, IDisposable
+    public class SftpClient : Dictionary<string, object>, IDisposable
     {
-        private FluentFTP.FtpClient _client;
-        public FtpClient(object options)
+        private Renci.SshNet.SftpClient _client;
+        public SftpClient(object options)
         {
             BlendedJSEngine.Clients.Add(this);
-            _client = new FluentFTP.FtpClient();
-
             var host = options.GetProperty("host").ToStringOrDefault();
-            if (host != null)
-                _client.Host = host;
-
             var port = options.GetProperty("port").ToIntOrDefault();
-            if (port != null)
-                _client.Port = port.Value;
-
             var user = options.GetProperty("user").ToStringOrDefault();
             var password = options.GetProperty("password").ToStringOrDefault();
-            if (user != null && password != null)
-                _client.Credentials = new NetworkCredential(user, password);
+
+            var connectionInfo = new Renci.SshNet.ConnectionInfo(host, user,
+                new Renci.SshNet.PasswordAuthenticationMethod(user, password));
+            //new Renci.SshNet.PrivateKeyAuthenticationMethod("rsa.key"));
+            _client = new Renci.SshNet.SftpClient(connectionInfo);
         }
 
         public void connect()
         {
             try
             {
-                _client.Connect();
+                if (_client.IsConnected == false)
+                    _client.Connect();
             }
             catch (Exception ex)
             {
@@ -55,16 +48,15 @@ namespace BlendedJS.Ftp
         {
             connect();
             List<object> list = new List<object>();
-            foreach (FtpListItem item in _client.GetListing(path.ToStringOrDefault()))
+            foreach (var item in _client.ListDirectory(path.ToStringOrDefault()))
             {
-                list.Add(
-                    new Dictionary<string, object>
-                    {
-                        {"name", item.Name},
-                        {"fullName", item.FullName},
-                        {"type", item.Type.ToStringOrDefault()},
-                        {"modified", item.Modified},
-                    });
+                list.Add(new Dictionary<string, object>
+                {
+                    {"name", item.Name},
+                    {"fullName", item.FullName},
+                    //{"type", item.Type.ToStringOrDefault()},
+                    {"modified", item.LastWriteTimeUtc},
+                });
             }
             return list.ToArray();
         }

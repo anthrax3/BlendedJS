@@ -8,9 +8,10 @@ namespace BlendedJS.Tests.Ftp
         [TestMethod]
         public void List_CannotConnectToTheHost()
         {
-            BlendedJSEngine mongo = new BlendedJSEngine();
-            var result = mongo.ExecuteScript(
-                @"
+            using (BlendedJSEngine engine = new BlendedJSEngine())
+            {
+                var result = engine.ExecuteScript(
+                    @"
                 try {
                     var ftpClient = new FtpClient({host:'example.com', user:'demo', password:'password'});
                     ftpClient.list();
@@ -19,8 +20,9 @@ namespace BlendedJS.Tests.Ftp
                 }
                 ");
 
-            Assert.IsNull(result.Value);
-            Assert.IsTrue(result.ConsoleTest.Contains("Cannot connect to the host."));
+                Assert.IsNull(result.Value);
+                Assert.IsTrue(result.ConsoleTest.Contains("Cannot connect to the host."));
+            }
         }
     }
 }

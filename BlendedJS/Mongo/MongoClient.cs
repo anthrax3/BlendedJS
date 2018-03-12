@@ -14,6 +14,7 @@ namespace BlendedJS.Mongo
 
         public MongoClient(object connectionStringOrOptions)
         {
+            BlendedJSEngine.Clients.Add(this);
             _connectionString = connectionStringOrOptions is string s ? s : connectionStringOrOptions.GetProperty("connectionString").ToStringOrDefault();
             _client = new MongoDB.Driver.MongoClient(_connectionString.ToStringOrDefault());
 
