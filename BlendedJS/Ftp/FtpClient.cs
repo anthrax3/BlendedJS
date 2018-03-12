@@ -7,7 +7,7 @@ using FluentFTP;
 
 namespace BlendedJS.Ftp
 {
-    public class FtpClient : Dictionary<string, object>, IDisposable
+    public class FtpClient : BaseObject
     {
         private FluentFTP.FtpClient _client;
         public FtpClient(object options)

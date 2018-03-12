@@ -55,6 +55,30 @@ namespace BlendedJS.Tests
         }
 
         [TestMethod]
+        public void ConsoleLog_StringPlusJsObject()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
+                @"
+                    var obj = {id:1, 'name':'dan'};
+                    console.log('text ' + obj);
+                ");
+            Assert.AreEqual("3: text [object Object]", result.ConsoleTest);
+        }
+
+        [TestMethod]
+        public void ConsoleLog_StringPlusCsObject()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
+                @"
+                    var obj = HttpClient();
+                    console.log('text ' + obj);
+                ");
+            Assert.AreEqual("3: text [object HttpClient]", result.ConsoleTest);
+        }
+
+        [TestMethod]
         public void ConsoleLog_CatchedJsError()
         {
             BlendedJSEngine engine = new BlendedJSEngine();

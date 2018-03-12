@@ -192,5 +192,10 @@ namespace BlendedJS
             }
             return null;
         }
+
+        public static IDictionary<string, object> ToJsObject(this IDictionary<string, object> dictionary)
+        {
+            return new Object(dictionary);
+        }
     }
 }

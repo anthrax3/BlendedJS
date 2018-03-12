@@ -9,7 +9,7 @@ using System.Text;
 namespace BlendedJS.Http
 {
     //https://github.com/request/request
-    public class HttpClient : Dictionary<string, object>
+    public class HttpClient : BaseObject
     {
         public HttpClient()
         {
