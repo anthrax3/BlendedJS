@@ -67,7 +67,31 @@ namespace BlendedJS.Tests
         }
 
         [TestMethod]
-        public void ConsoleLog_StringPlusCsObject()
+        public void ConsoleLog_StringPlusJsArray()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
+                @"
+                    var array = [1,2,3];
+                    console.log('text ' + array);
+                ");
+            Assert.AreEqual("3: text 1,2,3", result.ConsoleTest);
+        }
+
+        [TestMethod]
+        public void ConsoleLog_StringPlusJsArrayOfObjects()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
+                @"
+                    var array = [{a:1},{a:2},{a:3}];
+                    console.log('text ' + array);
+                ");
+            Assert.AreEqual("3: text [object Object],[object Object],[object Object]", result.ConsoleTest);
+        }
+
+        [TestMethod]
+        public void ConsoleLog_StringPlusCsHttpClient()
         {
             BlendedJSEngine engine = new BlendedJSEngine();
             var result = engine.ExecuteScript(
@@ -76,6 +100,51 @@ namespace BlendedJS.Tests
                     console.log('text ' + obj);
                 ");
             Assert.AreEqual("3: text [object HttpClient]", result.ConsoleTest);
+        }
+
+        [TestMethod]
+        public void ConsoleLog_StringPlusCsObject()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            Dictionary<string, object> obj = new Dictionary<string, object>();
+            engine.Jint.SetValue("TestClass", new Func<object>(() => obj.ToJsObject()));
+
+            var result = engine.ExecuteScript(
+                @"
+                    var obj = TestClass();
+                    console.log('text ' + obj);
+                ");
+            Assert.AreEqual("3: text [object Object]", result.ConsoleTest);
+        }
+
+        [TestMethod]
+        public void ConsoleLog_StringPlusCsArray()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            Dictionary<string, object> obj = new Dictionary<string, object>();
+            engine.Jint.SetValue("TestClass", new Func<object>(() => new object[] { 1, 2, 3 }));
+
+            var result = engine.ExecuteScript(
+                @"
+                    var obj = TestClass();
+                    console.log('text ' + obj);
+                ");
+            Assert.AreEqual("3: text 1,2,3", result.ConsoleTest);
+        }
+
+        [TestMethod]
+        public void ConsoleLog_StringPlusCsArrayOfObjects()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            Dictionary<string, object> obj = new Dictionary<string, object>();
+            engine.Jint.SetValue("TestClass", new Func<object>(() => new object[] { new Object(), new Object(), new Object() }));
+
+            var result = engine.ExecuteScript(
+                @"
+                    var obj = TestClass();
+                    console.log('text ' + obj);
+                ");
+            Assert.AreEqual("3: text [object Object],[object Object],[object Object]", result.ConsoleTest);
         }
 
         [TestMethod]

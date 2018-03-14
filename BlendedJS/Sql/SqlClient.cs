@@ -71,7 +71,7 @@ namespace BlendedJS.Sql
             List<object> items = new List<object>();
             while (reader.Read())
             {
-                Dictionary<string, object> item = new Dictionary<string, object>();
+                var item = new Object();
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
                     object value = reader.GetValue(i);

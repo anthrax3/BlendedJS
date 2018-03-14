@@ -58,7 +58,7 @@ namespace BlendedJS.Ftp
             foreach (FtpListItem item in _client.GetListing(path.ToStringOrDefault()))
             {
                 list.Add(
-                    new Dictionary<string, object>
+                    new Object
                     {
                         {"name", item.Name},
                         {"fullName", item.FullName},

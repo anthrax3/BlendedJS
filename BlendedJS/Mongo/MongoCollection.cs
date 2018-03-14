@@ -10,7 +10,7 @@ using static MongoDB.Driver.WriteConcern;
 
 namespace BlendedJS.Mongo
 {
-    public class MongoCollection
+    public class MongoCollection : BaseObject
     {
         private string _name;
         private IMongoCollection<BsonDocument> _collection;

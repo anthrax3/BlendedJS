@@ -132,7 +132,7 @@ namespace BlendedJS.Http
 
         private object ToDictionary(HttpResponseHeaders headers)
         {
-            Dictionary<string, object> headerObj = new Dictionary<string, object>();
+            Object headerObj = new Object();
             foreach (var header in headers)
             {
                 object value = header.Value.Count() > 1 ? 

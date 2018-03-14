@@ -2,7 +2,7 @@
 
 namespace BlendedJS.Http
 {
-    public class HttpResponse : Dictionary<string, object>
+    public class HttpResponse : BaseObject
     {
         public object statusCode
         {

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BlendedJS.Mongo
 {
-    public class InsertResult :  Dictionary<string, object>
+    public class InsertResult : BaseObject
     {
         public object acknowledged
         {
