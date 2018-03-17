@@ -46,11 +46,11 @@
  <td>constructor takes provider and connection string; provider:Sqlite|SqlServer|MySql|PostgreSQL/td>
 </tr>
 <tr>
- <td>query(sqlOrOptions:Object) :Object</td>
+ <td><code>query(sqlOrOptions:Object) :Object[]</code></td>
  <td>run SQL</td>
 </tr>
 <tr>
- <td>query(sql:String, parameters:Object)</td>
+ <td><code>query(sql:String, parameters:Object[])</code></td>
  <td>run SQL with parameters</td>
 </tr>
 </table>
