@@ -39,5 +39,5 @@
 Member | Description
 --- | ---
 `constructor(provider:String, connectionString:String)` | *constructor takes provider and connection string*
-`run(sqlOrOptions:Object) :Object` | *run SQL*
-`run(sql:String, parameters:Object) :SqlResults` | *run SQL with parameters*
+`query(sqlOrOptions:Object) :Object` | *run SQL*
+`query(sql:String, parameters:Object) :SqlResults` | *run SQL with parameters*
