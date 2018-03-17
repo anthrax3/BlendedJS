@@ -11,19 +11,20 @@ using BlendedJS.Sql;
 using Jint.Runtime.Debugger;
 using BlendedJS.Sftp;
 using BlendedJS.Ssh;
+using System.Threading;
 
 namespace BlendedJS
 {
     public class BlendedJSEngine : IDisposable
     {
-        [ThreadStatic]
-        public static Console Console = null;
-        [ThreadStatic]
-        public static List<object> Clients = new List<object>();
+        public static AsyncLocal<Console> Console = new AsyncLocal<BlendedJS.Console>();
+        public static AsyncLocal<List<object>> Clients = new AsyncLocal<List<object>>();
         public Engine Jint { get; private set; }
 
         public BlendedJSEngine()
         {
+            Console.Value = new BlendedJS.Console();
+            Clients.Value = new List<object>();
             Jint = new Jint.Engine(x =>
             {
                 x.DebugMode();
@@ -32,7 +33,7 @@ namespace BlendedJS
 
             Jint.Step += (sender, info) =>
             {
-                Console.currentLine = info.CurrentStatement.Location.Start.Line;
+                Console.Value.currentLine = info.CurrentStatement.Location.Start.Line;
                 return StepMode.Into;
             };
             Jint.SetValue("SqlClient", TypeReference.CreateTypeReference(Jint, typeof(SqlClient)));
@@ -45,20 +46,19 @@ namespace BlendedJS
             Jint.SetValue("ISODate", new Func<string, object>(x => new ISODate(x)));
             Jint.SetValue("tojson", new Func<object, object>(x => x));
             Jint.SetValue("print", new Action<object>(x => {
-                Console.log(x);
+                Console.Value.log(x);
             }));
             Jint.SetValue("printjson", new Action<object>(x => {
-                Console.log(x);
+                Console.Value.log(x);
             }));
             Jint.SetValue("log", new Action<object, object>((message, info) => {
-                Console.log(message, info);
+                Console.Value.log(message, info);
             }));
+            Jint.SetValue("console", Console.Value);
         }
     
         public BlendedJSResult ExecuteScript(string script)
         {
-            Console = new Console();
-            Jint.SetValue("console", Console);
             BlendedJSResult result = new BlendedJSResult();
             try
             {
@@ -67,16 +67,17 @@ namespace BlendedJS
             }
             catch (Exception ex)
             {
-                Console.log("ERROR: " + ex.Message);
+                Console.Value.log("ERROR, Line " + Console.Value.currentLine + " :" + ex.Message);
                 result.Exception = ex;
             }
-            result.Console = Console.logs;
+            result.Logs = Console.Value.logs;
+            result.LastExecutedLine = Console.Value.currentLine;
             return result;
         }
 
         public void Dispose()
         {
-            foreach (var client in Clients)
+            foreach (var client in Clients.Value)
             {
                 if (client is IDisposable)
                     ((IDisposable)client).Dispose();

@@ -12,7 +12,7 @@ namespace BlendedJS.Ssh
         private Renci.SshNet.SshClient _client;
         public SshClient(object options)
         {
-            BlendedJSEngine.Clients.Add(this);
+            BlendedJSEngine.Clients.Value.Add(this);
             var host = options.GetProperty("host").ToStringOrDefault();
             var port = options.GetProperty("port").ToIntOrDefault();
             var user = options.GetProperty("user").ToStringOrDefault();

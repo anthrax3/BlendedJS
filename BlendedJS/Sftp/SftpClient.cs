@@ -9,7 +9,7 @@ namespace BlendedJS.Sftp
         private Renci.SshNet.SftpClient _client;
         public SftpClient(object options)
         {
-            BlendedJSEngine.Clients.Add(this);
+            BlendedJSEngine.Clients.Value.Add(this);
             var host = options.GetProperty("host").ToStringOrDefault();
             var port = options.GetProperty("port").ToIntOrDefault();
             var user = options.GetProperty("user").ToStringOrDefault();

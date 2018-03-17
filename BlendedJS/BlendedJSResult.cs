@@ -8,18 +8,19 @@ namespace BlendedJS
     {
         public BlendedJSResult()
         {
-            Console = new List<Log>();
+            Logs = new List<Log>();
         }
 
-        public List<Log> Console { get; set; }
+        public List<Log> Logs { get; set; }
         public string ConsoleTest {
             get
             {
-                var lines = Console.Select(x => string.Format("{0}: {1}", x.Line, x.Arg1));
+                var lines = Logs.Select(x => string.Format("Line {0}: {1}", x.Line, x.Arg1));
                 return string.Join(Environment.NewLine, lines);
             }
         }
         public object Value { get; set; }
         public Exception Exception { get; internal set; }
+        public int LastExecutedLine { get; internal set; }
     }
 }

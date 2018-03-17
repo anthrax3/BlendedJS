@@ -12,7 +12,7 @@ namespace BlendedJS.Ftp
         private FluentFTP.FtpClient _client;
         public FtpClient(object options)
         {
-            BlendedJSEngine.Clients.Add(this);
+            BlendedJSEngine.Clients.Value.Add(this);
             _client = new FluentFTP.FtpClient();
 
             var host = options.GetProperty("host").ToStringOrDefault();

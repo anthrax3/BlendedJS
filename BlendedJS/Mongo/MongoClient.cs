@@ -10,11 +10,11 @@ namespace BlendedJS.Mongo
     {
         private MongoDB.Driver.MongoClient _client;
         private object _connectionString;
-        private Console _console = BlendedJSEngine.Console;
+        private Console _console = BlendedJSEngine.Console.Value;
 
         public MongoClient(object connectionStringOrOptions)
         {
-            BlendedJSEngine.Clients.Add(this);
+            BlendedJSEngine.Clients.Value.Add(this);
             _connectionString = connectionStringOrOptions is string s ? s : connectionStringOrOptions.GetProperty("connectionString").ToStringOrDefault();
             _client = new MongoDB.Driver.MongoClient(_connectionString.ToStringOrDefault());
 

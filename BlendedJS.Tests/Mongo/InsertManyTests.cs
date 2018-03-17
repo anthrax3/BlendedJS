@@ -71,7 +71,7 @@ namespace BlendedJS.Tests.Mongo
                     }
                 ");
 
-            Assert.IsTrue(results.Console[0].Arg1.ToString().Contains("duplicate key error index"));
+            Assert.IsTrue(results.Logs[0].Arg1.ToString().Contains("duplicate key error index"));
         }
     }
 }

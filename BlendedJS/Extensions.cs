@@ -178,7 +178,6 @@ namespace BlendedJS
             return bsonDocument;
         }
 
-
         public static object GetProperty(this object obj, string key)
         {
             if (obj == null)
@@ -191,6 +190,18 @@ namespace BlendedJS
                     return dictionary.First(x => x.Key.Equals(key)).Value;
             }
             return null;
+        }
+
+        public static void SetProperty(this object obj, string key, object value)
+        {
+            if (obj == null)
+                return;
+
+            var dictionary = obj as IDictionary<string, object>;
+            if (dictionary != null)
+            {
+                dictionary[key] = value;
+            }
         }
 
         public static IDictionary<string, object> ToJsObject(this IDictionary<string, object> dictionary)
