@@ -17,6 +17,8 @@
  ## SqlClient
  #### Run SQL
  ```javascript
+  //provider:Sqlite | MySql | SqlServer | PostgreSQL
+  //connectionString: Server=serverAddress;Database=dbName;User Id=user; Password=pass;
   var sqlClient = new  SqlClient({provider:'Sqlite',connectionString:'Data Source = chinook.db;'});
   var rows = sqlClient.query('select * from employees');
 ```
