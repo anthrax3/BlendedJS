@@ -38,6 +38,6 @@
 
 Member | Description
 --- | ---
-`constructor(provider:String, connectionString:String)` | *constructor takes provider and connection string*
+`constructor(provider:String, connectionString:String)` | *constructor takes provider and connection string; provider(Sqlite|SqlServer|MySql|PostgreSQL)*
 `query(sqlOrOptions:Object) :Object` | *run SQL*
 `query(sql:String, parameters:Object) :SqlResults` | *run SQL with parameters*
