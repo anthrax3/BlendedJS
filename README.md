@@ -36,8 +36,22 @@
   sqlClient.query('select * from employees where EmployeeId=@EmployeeId', {EmployeeId:1});
 ```
 
-Member | Description
---- | ---
-`constructor(provider:String, connectionString:String)` | *constructor takes provider and connection string; provider(Sqlite|SqlServer|MySql|PostgreSQL)*
-`query(sqlOrOptions:Object) :Object` | *run SQL*
-`query(sql:String, parameters:Object) :SqlResults` | *run SQL with parameters*
+<table>
+<tr>
+<th>Member</th>
+<th>Description</th>
+</tr>
+<tr>
+ <td>`constructor(provider:String, connectionString:String)`</td>
+ <td>constructor takes provider and connection string; provider:Sqlite|SqlServer|MySql|PostgreSQL/td>
+</tr>
+<tr>
+ <td>query(sqlOrOptions:Object) :Object</td>
+ <td>run SQL</td>
+</tr>
+<tr>
+ <td>query(sql:String, parameters:Object)</td>
+ <td>run SQL with parameters</td>
+</tr>
+</table>
+
