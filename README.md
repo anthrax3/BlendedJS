@@ -42,7 +42,7 @@
 <th>Description</th>
 </tr>
 <tr>
- <td>`constructor(provider:String, connectionString:String)`</td>
+ <td><code>constructor(provider:String, connectionString:String)</code></td>
  <td>constructor takes provider and connection string; provider:Sqlite|SqlServer|MySql|PostgreSQL/td>
 </tr>
 <tr>
