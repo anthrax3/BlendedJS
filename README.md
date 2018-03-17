@@ -21,21 +21,57 @@
   //connectionString: Server=serverAddress;Database=dbName;User Id=user; Password=pass;
   var sqlClient = new  SqlClient({provider:'Sqlite',connectionString:'Data Source = chinook.db;'});
   var rows = sqlClient.query('select * from employees');
+  console.log(rows);   // [{EmployeeId:1, ...},...]
 ```
 
  #### Run SQL with parameter
  ```javascript
   var sqlClient = new  SqlClient({provider:'Sqlite',connectionString:'Data Source = chinook.db;'});
-  var rows = sqlClient.query({
+  var row = sqlClient.query({
     sql:'select * from employees where EmployeeId=@EmployeeId', 
     parameters:{EmployeeId:1}
-  });
+  })[0];
+  console.log(row);   // {EmployeeId:1, ...}
 ```
 
  #### Run SQL with parameter (other version)
  ```javascript
   var sqlClient = new  SqlClient({provider:'Sqlite',connectionString:'Data Source = chinook.db;'});
-  var rows = sqlClient.query('select * from employees where EmployeeId=@EmployeeId', {EmployeeId:1});
+  var row = sqlClient.query('select * from employees where EmployeeId=@EmployeeId', {EmployeeId:1})[0];
+  console.log(row);   // {EmployeeId:1, ...}
 ```
 
+ ## HttpClient
+ #### Get website
+ ```javascript
+ var httpClient = new HttpClient();
+ var response = httpClient.get('https://www.theguardian.com');
+ console.log(response.statusCode);     // 200
+ console.log(response.reasonPhrase);   // OK
+ console.log(response.body);           // <html>...
+ console.log(result.headers);          // { {'Connection':'keep-alive'}...}
+```
+
+#### Get rest api
+ ```javascript
+ var httpClient = new HttpClient();
+ var response = httpClient.get({
+  url:'https://jsonplaceholder.typicode.com/posts',
+  headers: {'Content-Type':'application/json'}
+ });
+ var posts = JSON.parse(response.body);
+ console.log(posts);   // [ {"userId": 1, ...},...]
+```
+
+#### Post rest api
+ ```javascript
+ var httpClient = new HttpClient();
+ var response = httpClient.post({
+  url:'https://jsonplaceholder.typicode.com/posts',
+  headers: {'Content-Type':'application/json'},
+  body: { userId: 1, title: 'bla', body: 'bla bla bla'}
+ });
+ var post = JSON.parse(response.body);
+ console.log(post);   // {"id": 1}
+```
 
