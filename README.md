@@ -75,3 +75,12 @@
  console.log(post);   // {"id": 1}
 ```
 
+ ## MongoClient
+ #### Find all
+ ```javascript
+ 	var mongoClient = new MongoClient('mongodb://ipl:qwerty123@ds147510.mlab.com:47510/heroku_rgzrhk40');
+  var items = mongoClient.bios.find().toArray();
+  console.log(items);   // [{...}, ...]
+```
+
+
