@@ -49,7 +49,7 @@
  console.log(response.statusCode);     // 200
  console.log(response.reasonPhrase);   // OK
  console.log(response.body);           // <html>...
- console.log(result.headers);          // { {'Connection':'keep-alive'}...}
+ console.log(response.headers);        // { {'Connection':'keep-alive'}...}
 ```
 
 #### Get rest api
