@@ -335,5 +335,22 @@ namespace BlendedJS.Tests.Mongo
 
             Assert.AreEqual(5, results.ToList().Count);
         }
+
+        [TestMethod]
+        public void Find_ToArray()
+        {
+            TestData.TestData.Prepare("bios", "TestData/bios.json");
+
+            BlendedJSEngine mongo = new BlendedJSEngine();
+            mongo.Jint.SetValue("mongoConnectionString", TestData.TestData.MongoConnectionString);
+            var results = mongo.ExecuteScript(
+                @"
+                    var db = new MongoClient(this.mongoConnectionString);
+                    db.bios.find().toArray();
+                ");
+
+            var items = (object[])results.Value;
+            Assert.AreEqual(10, items.Length);
+        }
     }
 }

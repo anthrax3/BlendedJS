@@ -88,7 +88,7 @@ namespace BlendedJS.Mongo
         {
             _documents.ToCursor().ForEachAsync(x =>
             {
-                processor(x);
+                processor((object)x.ToDictionary().ToJsObject());
             });
         }
 
@@ -102,7 +102,12 @@ namespace BlendedJS.Mongo
 
         public object next()
         {
-            return _cursor?.Current;
+            return _cursor?.Current.ToDictionary().ToJsObject();
+        }
+
+        public object[] toArray()
+        {
+            return _documents.ToList().Select(x => (object)x.ToDictionary().ToJsObject()).ToArray();
         }
 
         public void noCursorTimeout()

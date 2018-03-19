@@ -17,11 +17,11 @@ namespace BlendedJS.Mongo
             BlendedJSEngine.Clients.Value.Add(this);
             _connectionString = connectionStringOrOptions is string s ? s : connectionStringOrOptions.GetProperty("connectionString").ToStringOrDefault();
             _client = new MongoDB.Driver.MongoClient(_connectionString.ToStringOrDefault());
-
-            foreach (var collectionName in _client.GetDatabase("heroku_rgzrhk40").ListCollections().ToList())
+            string databaseName = MongoUrl.Create(_connectionString.ToStringOrDefault()).DatabaseName;
+            foreach (var collectionName in _client.GetDatabase(databaseName).ListCollections().ToList())
             {
                 string name = collectionName.GetValue("name").ToString();
-                var collection = _client.GetDatabase("heroku_rgzrhk40").GetCollection<BsonDocument>(name);
+                var collection = _client.GetDatabase(databaseName).GetCollection<BsonDocument>(name);
                 this[name] = new MongoCollection(name, collection, _console);
             }
         }

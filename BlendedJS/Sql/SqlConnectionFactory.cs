@@ -18,7 +18,7 @@ namespace BlendedJS.Sql
                 connection = new SqliteConnection();
             if (provider.SafeEquals("SqlServer"))
                 connection = new SqlConnection();
-            if (provider.SafeEquals("Npgsql"))
+            if (provider.SafeEquals("PostgreSQL"))
                 connection = new NpgsqlConnection();
 
             //oracle: http://www.oracle.com/technetwork/topics/dotnet/downloads/odpnetcorebeta-4077982.html
