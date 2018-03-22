@@ -7,7 +7,7 @@ using FluentFTP;
 
 namespace BlendedJS.Ssh
 {
-    public class SshClient : Dictionary<string, object>
+    public class SshClient : BaseObject, IDisposable
     {
         private Renci.SshNet.SshClient _client;
         public SshClient(object options)
@@ -24,28 +24,30 @@ namespace BlendedJS.Ssh
             _client = new Renci.SshNet.SshClient(connectionInfo);
         }
 
-        public object runCommand(string command)
+        public void connect()
         {
-            List<object> list = new List<object>();
             try
             {
-                try
-                {
+                if (_client.IsConnected == false)
                     _client.Connect();
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Cannot connect to the host. " + ex.Message, ex);
-                }
-
-                _client.RunCommand(command);
             }
-            finally
+            catch (Exception ex)
             {
-                _client.Disconnect();
+                throw new Exception("Cannot connect to the host. " + ex.Message, ex);
             }
+        }
 
-            return null;
+        public object command(string command)
+        {
+            List<object> list = new List<object>();
+            connect();
+            _client.RunCommand(command);
+            return list;
+        }
+
+        public void Dispose()
+        {
+            _client?.Dispose();
         }
     }
 }
