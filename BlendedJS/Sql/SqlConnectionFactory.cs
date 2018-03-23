@@ -14,7 +14,7 @@ namespace BlendedJS.Sql
         public  IDbConnection CreateConnection(string provider, string connectionString)
         {
             IDbConnection connection = null;
-            if (provider.SafeEquals("MySql"))
+            if (provider.SafeEquals("MySql") || provider.SafeEquals("MariaDb"))
                 connection = new MySqlConnection(connectionString);
             if (provider.SafeEquals("Sqlite"))
                 connection = new SqliteConnection(connectionString);

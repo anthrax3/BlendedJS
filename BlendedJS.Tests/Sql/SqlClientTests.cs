@@ -120,6 +120,26 @@ namespace BlendedJS.Tests.Sql
         }
 
         [TestMethod]
+        public void Query_Odbc()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
+                @"
+                    var sqlClient = new  SqlClient({provider:'Odbc',connectionString:'SERVER=eu-cdbr-west-02.cleardb.net;DATABASE=heroku_dc6ceea567ee53d;UID=b87e93ab08ac48;PASSWORD=9f358192;'});
+                    sqlClient.query('drop table employees');
+                    sqlClient.query('create table employees (ID int, Name varchar(255))');
+                    sqlClient.query(""insert INTO  employees (ID,Name) VALUES (1, 'daniel')"");
+                    sqlClient.query('select * from employees');
+                ");
+
+            result.Logs.ForEach(x => System.Console.WriteLine(x.Arg1));
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, ((object[])result.Value).Length);
+            Assert.AreEqual(1, ((object[])result.Value)[0].GetProperty("ID"));
+            Assert.AreEqual("daniel", ((object[])result.Value)[0].GetProperty("Name"));
+        }
+
+        [TestMethod]
         public void Query_MariaDb()
         {
             BlendedJSEngine engine = new BlendedJSEngine();
