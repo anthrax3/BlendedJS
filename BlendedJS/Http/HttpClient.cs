@@ -36,6 +36,11 @@ namespace BlendedJS.Http
             return send(options, "DELETE");
         }
 
+        public object head(object options)
+        {
+            return send(options, "HEAD");
+        }
+
         public object send(object options)
         {
             return send(options, null);

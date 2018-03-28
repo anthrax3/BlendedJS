@@ -51,10 +51,12 @@ namespace BlendedJS.Sql
                 {
                     using (var reader = command.ExecuteReader())
                     {
+                        var records = ReadAllRecords(reader).ToArray();
+                        if (records.Length > 0)
+                            return records;
                         if (reader.RecordsAffected >= 0)
                             return reader.RecordsAffected;
-                        return
-                            ReadAllRecords(reader).ToArray();
+                        return records;
                     }
                 }
                 catch (SqlException ex)
