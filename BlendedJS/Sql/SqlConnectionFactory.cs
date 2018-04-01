@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Data.Odbc;
 using System.Data.SqlClient;
+using IBM.Data.DB2.Core;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using MySql.Data.MySqlClient;
@@ -26,6 +27,8 @@ namespace BlendedJS.Sql
                 connection = new OracleConnection(connectionString);
             if (provider.SafeEquals("Odbc"))
                 connection = new OdbcConnection(connectionString);
+            if (provider.SafeEquals("DB2"))
+                connection = new DB2Connection(connectionString);
             return connection;
         }
     }
