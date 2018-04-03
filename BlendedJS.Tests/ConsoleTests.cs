@@ -17,7 +17,7 @@ namespace BlendedJS.Tests
                 @"
                     log('bla bla bla');
                 ");
-            Assert.AreEqual("2: bla bla bla", result.ConsoleTest);
+            Assert.AreEqual("Line 2: bla bla bla", result.ConsoleTest);
         }
 
         [TestMethod]
@@ -26,9 +26,33 @@ namespace BlendedJS.Tests
             BlendedJSEngine engine = new BlendedJSEngine();
             var result = engine.ExecuteScript(
                 @"
-                    console.log('bla bla bla');
+                    console.log(`bla bla bla`);
                 ");
-            Assert.AreEqual("2: bla bla bla", result.ConsoleTest);
+            Assert.AreEqual("Line 2: bla bla bla", result.ConsoleTest);
+        }
+
+        [TestMethod]
+        public void ConsoleLog_GraveAccent()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
+                @"
+                    console.log(`bla bla bla`);
+                ");
+            Assert.AreEqual("Line 2: bla bla bla", result.ConsoleTest);
+        }
+
+        [TestMethod]
+        public void ConsoleLog_GraveAccentMultiLine()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
+                @"
+                    console.log(`bla 
+bla 
+bla`);
+                ");
+            Assert.AreEqual("Line 2: bla \r\nbla \r\nbla", result.ConsoleTest);
         }
 
         [TestMethod]
@@ -39,7 +63,7 @@ namespace BlendedJS.Tests
                 @"
                     console.log(2 + 2);
                 ");
-            Assert.AreEqual("2: 4", result.ConsoleTest);
+            Assert.AreEqual("Line 2: 4", result.ConsoleTest);
         }
 
         [TestMethod]
@@ -51,7 +75,7 @@ namespace BlendedJS.Tests
                     var obj = {id:1, 'name':'dan'};
                     console.log(obj);
                 ");
-            Assert.AreEqual("3: {\"id\":1.0,\"name\":\"dan\"}", result.ConsoleTest);
+            Assert.AreEqual("Line 3: {\"id\":1.0,\"name\":\"dan\"}", result.ConsoleTest);
         }
 
         [TestMethod]
@@ -63,7 +87,7 @@ namespace BlendedJS.Tests
                     var obj = {id:1, 'name':'dan'};
                     console.log('text ' + obj);
                 ");
-            Assert.AreEqual("3: text [object Object]", result.ConsoleTest);
+            Assert.AreEqual("Line 3: text [object Object]", result.ConsoleTest);
         }
 
         [TestMethod]
@@ -75,7 +99,7 @@ namespace BlendedJS.Tests
                     var array = [1,2,3];
                     console.log('text ' + array);
                 ");
-            Assert.AreEqual("3: text 1,2,3", result.ConsoleTest);
+            Assert.AreEqual("Line 3: text 1,2,3", result.ConsoleTest);
         }
 
         [TestMethod]
@@ -87,7 +111,7 @@ namespace BlendedJS.Tests
                     var array = [{a:1},{a:2},{a:3}];
                     console.log('text ' + array);
                 ");
-            Assert.AreEqual("3: text [object Object],[object Object],[object Object]", result.ConsoleTest);
+            Assert.AreEqual("Line 3: text [object Object],[object Object],[object Object]", result.ConsoleTest);
         }
 
         [TestMethod]
@@ -99,7 +123,7 @@ namespace BlendedJS.Tests
                     var obj = HttpClient();
                     console.log('text ' + obj);
                 ");
-            Assert.AreEqual("3: text [object HttpClient]", result.ConsoleTest);
+            Assert.AreEqual("Line 3: text [object HttpClient]", result.ConsoleTest);
         }
 
         [TestMethod]
@@ -114,7 +138,7 @@ namespace BlendedJS.Tests
                     var obj = TestClass();
                     console.log('text ' + obj);
                 ");
-            Assert.AreEqual("3: text [object Object]", result.ConsoleTest);
+            Assert.AreEqual("Line 3: text [object Object]", result.ConsoleTest);
         }
 
         [TestMethod]
@@ -129,7 +153,7 @@ namespace BlendedJS.Tests
                     var obj = TestClass();
                     console.log('text ' + obj);
                 ");
-            Assert.AreEqual("3: text 1,2,3", result.ConsoleTest);
+            Assert.AreEqual("Line 3: text 1,2,3", result.ConsoleTest);
         }
 
         [TestMethod]
@@ -144,7 +168,7 @@ namespace BlendedJS.Tests
                     var obj = TestClass();
                     console.log('text ' + obj);
                 ");
-            Assert.AreEqual("3: text [object Object],[object Object],[object Object]", result.ConsoleTest);
+            Assert.AreEqual("Line 3: text [object Object],[object Object],[object Object]", result.ConsoleTest);
         }
 
         [TestMethod]
@@ -160,7 +184,7 @@ namespace BlendedJS.Tests
                         console.log('catch ' + err);
                     }
                 ");
-            Assert.AreEqual("6: catch ReferenceError: doSomeJob is not defined", result.ConsoleTest);
+            Assert.AreEqual("Line 6: catch ReferenceError: doSomeJob is not defined", result.ConsoleTest);
         }
 
         [TestMethod]
@@ -177,7 +201,7 @@ namespace BlendedJS.Tests
                         console.log('catch ' + err);
                     }
                 ");
-            Assert.AreEqual("6: catch Error: bla bla bla", result.ConsoleTest);
+            Assert.AreEqual("Line 6: catch Error: bla bla bla", result.ConsoleTest);
         }
 
         [TestMethod]
@@ -189,7 +213,7 @@ namespace BlendedJS.Tests
                 @"
                     doSomeJob();
                 ");
-            Assert.AreEqual("2: ERROR: bla bla bla", result.ConsoleTest);
+            Assert.AreEqual("Line 2: ERROR: bla bla bla", result.ConsoleTest);
         }
     }
 }
