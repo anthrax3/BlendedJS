@@ -13,6 +13,7 @@ using BlendedJS.Sftp;
 using BlendedJS.Ssh;
 using System.Threading;
 using BlendedJS.Cassandra;
+using BlendedJS.Redis;
 
 namespace BlendedJS
 {
@@ -44,6 +45,7 @@ namespace BlendedJS
             Jint.SetValue("SftpClient", TypeReference.CreateTypeReference(Jint, typeof(SftpClient)));
             Jint.SetValue("SshClient", TypeReference.CreateTypeReference(Jint, typeof(SshClient)));
             Jint.SetValue("CassandraClient", TypeReference.CreateTypeReference(Jint, typeof(CassandraClient)));
+            Jint.SetValue("RedisClient", TypeReference.CreateTypeReference(Jint, typeof(RedisClient)));
             Jint.SetValue("ObjectId", new Func<string, object>(x => new ObjectId(x)));
             Jint.SetValue("ISODate", new Func<string, object>(x => new ISODate(x)));
             Jint.SetValue("tojson", new Func<object, object>(x => x));
