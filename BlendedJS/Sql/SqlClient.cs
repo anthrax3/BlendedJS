@@ -14,12 +14,35 @@ namespace BlendedJS.Sql
         private object _provider;
         private object _connectionString;
 
+        public SqlClient(){ }
+        public SqlClient(object options, object ar2) : this(options) { }
+        public SqlClient(object options, object ar2, object arg3) : this(options) { }
+        public SqlClient(object options, object ar2, object arg3, object arg4) : this(options) { }
+        public SqlClient(object options, object ar2, object arg3, object arg4, object arg5) : this(options) { }
+
         public SqlClient(object options)
         {
             BlendedJSEngine.Clients.Value.Add(this);
+
             _provider = options.GetProperty("provider").ToStringOrDefault();
             _connectionString = options.GetProperty("connectionString").ToStringOrDefault();
+            string driver = options.GetProperty("driver").ToStringOrDefault();
+            if (string.IsNullOrEmpty(driver) == false)
+                _connectionString += ("DRIVER=" + driver + ";");
+            string server = options.GetProperty("server").ToStringOrDefault();
+            if (string.IsNullOrEmpty(server) == false)
+                _connectionString +=("SERVER=" + server + ";");
+            string database = options.GetProperty("database").ToStringOrDefault();
+            if (string.IsNullOrEmpty(database) == false)
+                _connectionString += ("DATABASE=" + database + ";");
+            string user = options.GetProperty("user").ToStringOrDefault();
+            if (string.IsNullOrEmpty(user) == false)
+                _connectionString += ("UID=" + user + ";");
+            string password = options.GetProperty("password").ToStringOrDefault();
+            if (string.IsNullOrEmpty(password) == false)
+                _connectionString += ("PASSWORD=" + password + ";");
         }
+
         public object query(object sql, object parameters)
         {
             return query(new Object(new Dictionary<string, object>()

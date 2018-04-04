@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using Remotion.Linq.Utilities;
 using static MongoDB.Driver.WriteConcern;
 
 namespace BlendedJS.Mongo
@@ -50,7 +51,7 @@ namespace BlendedJS.Mongo
 
         public object findOne(object filter, object projection)
         {
-            return _collection.Find(filter.ToBsonDocument()).Project(projection.ToBsonDocument()).FirstOrDefault();
+            return _collection.Find(filter.ToBsonDocument()).Project(projection.ToBsonDocument());
         }
 
         public object findOneAndDelete(object filter)

@@ -36,13 +36,13 @@ namespace BlendedJS.Tests.Mongo
                     db.bios.findOne(
                        {
                          $or: [
-                                { 'name.first' : /^G/ },
-                                { birth: { $lt: new Date('01/01/1945') } }
+                                { 'name.first' : /^D/ },
+                                { birth: { $lt: new Date('1940-01-01') } }
                               ]
                        }
                     );
                 ");
-
+            System.Console.Write(results.ConsoleTest);
             var firstDocument = (BsonDocument)results.Value;
             Assert.IsNotNull(firstDocument);
             Assert.IsTrue(firstDocument.ToString().StartsWith("{ \"_id\" : 3,"));

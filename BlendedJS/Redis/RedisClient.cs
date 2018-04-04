@@ -18,7 +18,11 @@ namespace BlendedJS.Redis
             BlendedJSEngine.Clients.Value.Add(this);
 
             //https://www.tutorialspoint.com/redis/redis_keys.htm
-            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("redis://redistogo:d4c6bc6e459b596471cfbb8c2f1e73b5@porgy.redistogo.com:10545");
+            //redis://redistogo:d4c6bc6e459b596471cfbb8c2f1e73b5@porgy.redistogo.com:10545
+            ConfigurationOptions options = ConfigurationOptions.Parse("porgy.redistogo.com:10545,ssl=true,name=redistogo,password=d4c6bc6e459b596471cfbb8c2f1e73b5");
+
+            //redis://h:p7d22f3439a2b9210fe68c043b61936b22b9fcfaf499c6b9e5c48088ec7291c86@ec2-52-18-191-147.eu-west-1.compute.amazonaws.com:12209
+            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("ec2-52-18-191-147.eu-west-1.compute.amazonaws.com:12209,name=h,password=p7d22f3439a2b9210fe68c043b61936b22b9fcfaf499c6b9e5c48088ec7291c86");
             _db = redis.GetDatabase();
         }
 

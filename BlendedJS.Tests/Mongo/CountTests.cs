@@ -18,7 +18,7 @@ namespace BlendedJS.Tests.Mongo
                 var db = new MongoClient(this.mongoConnectionString);
                 db.bios.count()
                 ");
-
+            System.Console.Write(results.ConsoleTest);
             int count = Convert.ToInt32(results.Value);
             Assert.AreEqual(10, count);
         }

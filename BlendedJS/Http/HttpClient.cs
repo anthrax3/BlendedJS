@@ -11,6 +11,12 @@ namespace BlendedJS.Http
     //https://github.com/request/request
     public class HttpClient : BaseObject
     {
+        public HttpClient(object arg1) : this() { }
+        public HttpClient(object arg1, object ar2) : this() { }
+        public HttpClient(object arg1, object ar2, object arg3) : this() { }
+        public HttpClient(object arg1, object ar2, object arg3, object arg4) : this() { }
+        public HttpClient(object arg1, object ar2, object arg3, object arg4, object arg5) : this() { }
+
         public HttpClient()
         {
             BlendedJSEngine.Clients.Value.Add(this);
