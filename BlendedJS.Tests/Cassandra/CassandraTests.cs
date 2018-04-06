@@ -56,9 +56,9 @@ namespace BlendedJS.Tests.Cassandra
                     var tableCreated = cassandraClient.execute('CREATE TABLE  IF NOT EXISTS test.employees(id int PRIMARY KEY, name text);');
                     console.log(tableCreated);
                     
-                    var id = 1;
+                    var id = new Int(1);
                     var name = 'daniel';
-                    var rowInserted = cassandraClient.execute(""INSERT INTO test.employees (id, name) VALUES (?, ?);"",
+                    var rowInserted = cassandraClient.execute(""INSERT INTO test.employees (id, name) VALUES (?,?);"",
                         [id, name]);
                     console.log(rowInserted);
 

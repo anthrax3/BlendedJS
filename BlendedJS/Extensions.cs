@@ -208,5 +208,15 @@ namespace BlendedJS
         {
             return new Object(dictionary);
         }
+
+        public static object MapDotNetType(this object obj)
+        {
+            return obj is Types.ValueType ? ((Types.ValueType) obj).GetValue() : obj;
+        }
+
+        public static object[] MapDotNetTypes(this object[] array)
+        {
+            return array.Select(x => x.MapDotNetType()).ToArray();
+        }
     }
 }

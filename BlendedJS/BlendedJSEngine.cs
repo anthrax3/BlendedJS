@@ -14,6 +14,9 @@ using BlendedJS.Ssh;
 using System.Threading;
 using BlendedJS.Cassandra;
 using BlendedJS.Redis;
+using BlendedJS.Types;
+using Decimal = System.Decimal;
+using Double = System.Double;
 
 namespace BlendedJS
 {
@@ -38,6 +41,14 @@ namespace BlendedJS
                 Console.Value.currentLine = info.CurrentStatement.Location.Start.Line;
                 return StepMode.Into;
             };
+            Jint.SetValue("BigInteger", TypeReference.CreateTypeReference(Jint, typeof(BlendedJS.Types.BigInteger)));
+            Jint.SetValue("Decimal", TypeReference.CreateTypeReference(Jint, typeof(BlendedJS.Types.Decimal)));
+            Jint.SetValue("Double", TypeReference.CreateTypeReference(Jint, typeof(BlendedJS.Types.Double)));
+            Jint.SetValue("Float", TypeReference.CreateTypeReference(Jint, typeof(BlendedJS.Types.Float)));
+            Jint.SetValue("Guid", TypeReference.CreateTypeReference(Jint, typeof(BlendedJS.Types.Guid)));
+            Jint.SetValue("Int", TypeReference.CreateTypeReference(Jint, typeof(BlendedJS.Types.Int)));
+            Jint.SetValue("Long", TypeReference.CreateTypeReference(Jint, typeof(BlendedJS.Types.Long)));
+            Jint.SetValue("Short", TypeReference.CreateTypeReference(Jint, typeof(BlendedJS.Types.Short)));
             Jint.SetValue("SqlClient", TypeReference.CreateTypeReference(Jint, typeof(SqlClient)));
             Jint.SetValue("MongoClient", TypeReference.CreateTypeReference(Jint, typeof(MongoClient)));
             Jint.SetValue("HttpClient", TypeReference.CreateTypeReference(Jint, typeof(HttpClient)));

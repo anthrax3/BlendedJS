@@ -73,8 +73,8 @@ namespace BlendedJS.Cassandra
         public object execute(object query, object[] parameters)
         {
             PreparedStatement statement = _session.Prepare(query.ToStringOrDefault());
-            statement.Bind(parameters);
-            var rows = _session.Execute((IStatement)statement);
+            var boundStatement = statement.Bind(parameters.MapDotNetTypes());
+            var rows = _session.Execute(boundStatement);
             return rows.Select(x =>
             {
                 Object obj = new Object();
