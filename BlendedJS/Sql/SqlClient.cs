@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.SqlClient;
+using System.Net.Http.Headers;
+using System.Text;
 using Microsoft.Data.Sqlite;
 using MySql.Data.MySqlClient;
 using Npgsql;
@@ -26,6 +28,25 @@ namespace BlendedJS.Sql
 
             _provider = options.GetProperty("provider").ToStringOrDefault();
             _connectionString = options.GetProperty("connectionString").ToStringOrDefault();
+
+            string connectionUrl = options.GetProperty("connectionUrl").ToStringOrDefault();
+            if (string.IsNullOrEmpty(connectionUrl) == false)
+            {
+                Uri parsedUrl = new Uri(connectionUrl);
+                _provider = parsedUrl.Scheme;
+                _connectionString += ("SERVER=" + parsedUrl.Host + ";");
+                _connectionString += ("DATABASE=" + parsedUrl.LocalPath.Substring(1) + ";");
+                if (string.IsNullOrEmpty(parsedUrl.UserInfo) == false)
+                {
+                    string[] userCredentials = parsedUrl.UserInfo.Split(new[] { ':' });
+                    if (userCredentials.Length == 2)
+                    {
+                        _connectionString += ("UID=" + userCredentials[0] + ";");
+                        _connectionString += ("PASSWORD=" + userCredentials[1] + ";");
+                    }
+                }
+            }
+
             string driver = options.GetProperty("driver").ToStringOrDefault();
             if (string.IsNullOrEmpty(driver) == false)
                 _connectionString += ("DRIVER=" + driver + ";");
@@ -35,6 +56,9 @@ namespace BlendedJS.Sql
             string database = options.GetProperty("database").ToStringOrDefault();
             if (string.IsNullOrEmpty(database) == false)
                 _connectionString += ("DATABASE=" + database + ";");
+            string dataSource = options.GetProperty("dataSource").ToStringOrDefault();
+            if (string.IsNullOrEmpty(dataSource) == false)
+                _connectionString += ("DATA SOURCE=" + dataSource + ";");
             string user = options.GetProperty("user").ToStringOrDefault();
             if (string.IsNullOrEmpty(user) == false)
                 _connectionString += ("UID=" + user + ";");

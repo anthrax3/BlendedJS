@@ -152,6 +152,68 @@ namespace BlendedJS.Tests.Sql
         }
 
         [TestMethod]
+        public void Query_Sqlite_ConnectionString()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
+                @"
+                    var sqlClient = new  SqlClient({provider:'Sqlite',connectionString:'Data source=test.db;'});
+                    try {sqlClient.query('drop table employees');} catch(e){}
+                    sqlClient.query('create table employees (ID int, Name varchar(255))');
+                    sqlClient.query(""insert INTO  employees (ID,Name) VALUES (1, 'daniel')"");
+                    sqlClient.query('select * from employees');
+                ");
+
+            result.Logs.ForEach(x => System.Console.WriteLine(x.Arg1));
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, ((object[])result.Value).Length);
+            Assert.AreEqual(Convert.ToInt64(1), ((object[])result.Value)[0].GetProperty("ID"));
+            Assert.AreEqual("daniel", ((object[])result.Value)[0].GetProperty("Name"));
+        }
+
+        [TestMethod]
+        public void Query_Sqlite_ConnectionProperties()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
+                @"
+                    var sqlClient = new  SqlClient({
+                        provider:'Sqlite',
+                        dataSource:'test.db'});
+                    try {sqlClient.query('drop table employees');} catch(e){}
+                    sqlClient.query('create table employees (ID int, Name varchar(255))');
+                    sqlClient.query(""insert INTO  employees (ID,Name) VALUES (1, 'daniel')"");
+                    sqlClient.query('select * from employees');
+                ");
+
+            result.Logs.ForEach(x => System.Console.WriteLine(x.Arg1));
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, ((object[])result.Value).Length);
+            Assert.AreEqual(Convert.ToInt64(1), ((object[])result.Value)[0].GetProperty("ID"));
+            Assert.AreEqual("daniel", ((object[])result.Value)[0].GetProperty("Name"));
+        }
+
+        [TestMethod]
+        public void Query_MySql_ConnectionUrl()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
+                @"
+                    var sqlClient = new  SqlClient({connectionUrl:'mysql://b87e93ab08ac48:9f358192@eu-cdbr-west-02.cleardb.net/heroku_dc6ceea567ee53d?reconnect=true'});
+                    try {sqlClient.query('drop table employees');} catch(e){}
+                    sqlClient.query('create table employees (ID int, Name varchar(255))');
+                    sqlClient.query(""insert INTO  employees (ID,Name) VALUES (1, 'daniel')"");
+                    sqlClient.query('select * from employees');
+                ");
+
+            result.Logs.ForEach(x => System.Console.WriteLine(x.Arg1));
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, ((object[])result.Value).Length);
+            Assert.AreEqual(1, ((object[])result.Value)[0].GetProperty("ID"));
+            Assert.AreEqual("daniel", ((object[])result.Value)[0].GetProperty("Name"));
+        }
+
+        [TestMethod]
         public void Query_MySql_ConnectionString()
         {
             BlendedJSEngine engine = new BlendedJSEngine();
@@ -243,6 +305,26 @@ namespace BlendedJS.Tests.Sql
         }
 
         [TestMethod]
+        public void Query_MariaDb_ConnectionUrl()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
+                @"
+                    var sqlClient = new  SqlClient({connectionUrl:'mariadb://a92wi271nqdylv7v:cwfjedtktiywq2ul@rmspavs8mpub7dkq.chr7pe7iynqr.eu-west-1.rds.amazonaws.com/xy39fg5tb0y2wim0'});
+                    try {sqlClient.query('drop table employees');} catch(e){}
+                    sqlClient.query('create table employees (ID int, Name varchar(255))');
+                    sqlClient.query(""insert INTO  employees (ID,Name) VALUES (1, 'daniel')"");
+                    sqlClient.query('select * from employees');
+                ");
+
+            result.Logs.ForEach(x => System.Console.WriteLine(x.Arg1));
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, ((object[])result.Value).Length);
+            Assert.AreEqual(1, ((object[])result.Value)[0].GetProperty("ID"));
+            Assert.AreEqual("daniel", ((object[])result.Value)[0].GetProperty("Name"));
+        }
+
+        [TestMethod]
         public void Query_MariaDb_ConnectionString()
         {
             BlendedJSEngine engine = new BlendedJSEngine();
@@ -285,6 +367,26 @@ namespace BlendedJS.Tests.Sql
             Assert.AreEqual(1, ((object[])result.Value).Length);
             Assert.AreEqual(1, ((object[])result.Value)[0].GetProperty("ID"));
             Assert.AreEqual("daniel", ((object[])result.Value)[0].GetProperty("Name"));
+        }
+
+        [TestMethod]
+        public void Query_Postgres_ConnectionUrl()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
+                @"
+                    var sqlClient = new  SqlClient({connectionUrl:'postgres://lcwvemac:Vm1Kbfp9XqaKsn1f1fLaHkrD0NipmIUQ@baasu.db.elephantsql.com:5432/lcwvemac'});
+                    try {sqlClient.query('drop table employees');} catch(e){}
+                    sqlClient.query('create table employees (ID int, Name varchar(255))');
+                    sqlClient.query(""insert INTO  employees (ID,Name) VALUES (1, 'daniel')"");
+                    sqlClient.query('select * from employees');
+                ");
+
+            result.Logs.ForEach(x => System.Console.WriteLine(x.Arg1));
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, ((object[])result.Value).Length);
+            Assert.AreEqual(1, ((object[])result.Value)[0].GetProperty("id"));
+            Assert.AreEqual("daniel", ((object[])result.Value)[0].GetProperty("name"));
         }
 
         [TestMethod]
