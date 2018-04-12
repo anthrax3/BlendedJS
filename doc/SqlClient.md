@@ -132,7 +132,7 @@
 ```
 
 
- ### Run Select Query
+ ## Run Select Query
  - Simple select query
  ```javascript
   var rows = sqlClient.query('select * from employees');
@@ -153,7 +153,7 @@
  console.log(rows);   // [{Id:1, Name:'John'}]
 ```
 
-### Run Cursor
+## Run Cursor
 - Read records using hasNext() and next() methods.
  ```javascript
  var cursor = sqlClient.cursor('select * from employees');
