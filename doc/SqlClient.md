@@ -1,6 +1,6 @@
 # SqlClient
 
-#### Initialization
+### Initialization
 
 - Sqlite
  ```javascript
