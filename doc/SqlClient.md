@@ -142,15 +142,16 @@
 - Select with parameters
  ```javascript
   // first version
+  var rows = sqlClient.query('select * from employees where Id=@Id', {Id:1});
+  console.log(rows);   // [{Id:1, Name:'John'}]
+ 
+ // second version
   var rows = sqlClient.query({
     sql:'select * from employees where Id=@Id', 
     parameters:{Id:1}
   });
   console.log(rows);   // [{Id:1, Name:'John'}]
  
- // second version
- var rows = sqlClient.query('select * from employees where Id=@Id', {Id:1});
- console.log(rows);   // [{Id:1, Name:'John'}]
 ```
 
 ## Run Cursor
