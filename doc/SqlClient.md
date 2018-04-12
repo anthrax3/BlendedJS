@@ -136,7 +136,7 @@
  - Simple select query
  ```javascript
   var rows = sqlClient.query('select * from employees');
-  console.log(rows);   // returns array of objects [{Id:1, Name:'John'},{Id:2, Name:'Mike'},...]
+  console.log(rows);   // [{Id:1, Name:'John'},{Id:2, Name:'Mike'},...]
 ```
 
 - Select with parameters
@@ -150,7 +150,7 @@
  
  // second version
  var rows = sqlClient.query('select * from employees where Id=@Id', {Id:1});
- console.log(rows);   // returns array of objects [{Id:1, Name:'John'}]
+ console.log(rows);   // [{Id:1, Name:'John'}]
 ```
 
 ### Run Cursor
@@ -164,15 +164,22 @@
    items.push(item);
  }
  cursor.close();
- console.log(items); returns array of objects [{Id:1, Name:'John'},{Id:2, Name:'Mike'},...]
+ console.log(items); // [{Id:1, Name:'John'},{Id:2, Name:'Mike'},...]
 ```
 
 - Read records using each(function(){}) method
  ```javascript
-var cursor = sqlClient.cursor('select * from employees where Id=@Id', {Id:1});
+var cursor = sqlClient.cursor('select * from employees');
 var items = [];
 cursor.each(function(item) {items.push(item)});
 cursor.close();
-console.log(items); returns array with one object [{Id:1, Name:'John'}]
+console.log(items); // [{Id:1, Name:'John'},{Id:2, Name:'Mike'},...]
+
+- Read first item
+ ```javascript
+var cursor = sqlClient.cursor('select * from employees where Id=@Id', {Id:1});
+var item = cursor.first();
+cursor.close();
+console.log(item); // [{Id:1, Name:'John'}]
 ```
 
