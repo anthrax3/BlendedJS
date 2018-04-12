@@ -174,6 +174,7 @@ var items = [];
 cursor.each(function(item) {items.push(item)});
 cursor.close();
 console.log(items); // [{Id:1, Name:'John'},{Id:2, Name:'Mike'},...]
+```
 
 - Read first item
  ```javascript
