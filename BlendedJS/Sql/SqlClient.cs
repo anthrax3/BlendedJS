@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.Data.Sqlite;
@@ -11,10 +12,13 @@ using Npgsql;
 
 namespace BlendedJS.Sql
 {
-    public class SqlClient : BaseObject
+    public class SqlClient : BaseObject, IDisposable
     {
         private object _provider;
         private object _connectionString;
+        private IDbConnection _connection;
+        private IDbTransaction _dbTransaction;
+        private List<IDbCommand> _dbCommands = new List<IDbCommand>();
 
         public SqlClient(){ }
         public SqlClient(object options, object ar2) : this(options) { }
@@ -67,65 +71,123 @@ namespace BlendedJS.Sql
                 _connectionString += ("PASSWORD=" + password + ";");
         }
 
+        public void connect()
+        {
+            try
+            {
+                if (_connection == null)
+                    _connection = new SqlConnectionFactory().CreateConnection(_provider.ToStringOrDefault(), _connectionString.ToStringOrDefault());
+                if (_connection.State == ConnectionState.Closed)
+                    _connection.Open();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Cannot connect to the database. " + ex.Message, ex);
+            }
+        }
+
+        public void end()
+        {
+            _connection?.Close();
+            _connection?.Dispose();
+            _connection = null;
+        }
+
+        public void transaction()
+        {
+            if (_connection == null)
+                throw new Exception("Cannot begin transactoin. Connection is closed");
+
+            _dbTransaction = _connection.BeginTransaction();
+        }
+
+        public void commit()
+        {
+            if (_connection == null)
+                throw new Exception("Cannot commit transactoin. Transaction is not begun");
+
+            _dbTransaction?.Commit();
+            _dbTransaction = null;
+        }
+
+        public void rollback()
+        {
+            if (_connection == null)
+                throw new Exception("Cannot rollback transactoin. Transaction is not begun");
+
+            _dbTransaction?.Rollback();
+            _dbTransaction = null;
+        }
+
         public object query(object sql, object parameters)
         {
             return query(new Object(new Dictionary<string, object>()
-                {
-                    { "sql", sql },
-                    { "parameters", parameters }
-                }));
+            {
+                { "sql", sql },
+                { "parameters", parameters }
+            }));
         }
+
         public object query(object sqlOrOptions)
+        {
+            using (var reader = ExecuteReader(sqlOrOptions))
+            {
+                object[] items = AsEnumerable(reader).ToArray();
+                if (items.Length == 0 && reader.RecordsAffected >= 0)
+                    return reader.RecordsAffected;
+                else
+                    return items;
+            }
+        }
+
+        public object cursor(object sql, object parameters)
+        {
+            return cursor(new Object(new Dictionary<string, object>()
+            {
+                { "sql", sql },
+                { "parameters", parameters }
+            }));
+        }
+
+        public object cursor(object sqlOrOptions)
+        {
+            var reader = ExecuteReader(sqlOrOptions);
+            var enumerable = AsEnumerable(reader);
+            return new SqlCursor(enumerable, reader);
+        }
+
+        private IDataReader ExecuteReader(object sqlOrOptions)
         {
             string query = sqlOrOptions.GetProperty("sql").ToStringOrDefault(sqlOrOptions.ToStringOrDefault());
             var parameters = sqlOrOptions.GetProperty("parameters") as IDictionary<string, object>;
 
-            using (IDbConnection connection = new SqlConnectionFactory().CreateConnection(_provider.ToStringOrDefault(), _connectionString.ToStringOrDefault()))
-            using (IDbCommand command = connection.CreateCommand())
+            connect();
+            IDbCommand command = _connection.CreateCommand();
+            _dbCommands.Add(command);
+            command.CommandText = query;
+            AddParameters(command, parameters);
+            try
             {
-                command.CommandText = query;
-                AddParameters(command, parameters);
-                try
-                {
-                    connection.Open();
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Cannot connect to the database. " + ex.Message, ex);
-                }
-
-                try
-                {
-                    using (var reader = command.ExecuteReader())
-                    {
-                        var records = ReadAllRecords(reader).ToArray();
-                        if (records.Length > 0)
-                            return records;
-                        if (reader.RecordsAffected >= 0)
-                            return reader.RecordsAffected;
-                        return records;
-                    }
-                }
-                catch (SqlException ex)
-                {
-                    throw new Exception(string.Format("Cannot run the query. Msg {0}, State {1}, Line {2}. {3}",
-                        ex.Number, ex.State, ex.LineNumber, ex.Message), ex);
-                }
-                catch (MySqlException ex)
-                {
-                    throw new Exception(string.Format("Cannot run the query. Code {0}, State {1}, Number {2}. {3}",
-                        ex.Code, ex.SqlState, ex.Number, ex.Message), ex);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Cannot run the query. " + ex.Message, ex);
-                }
+                return command.ExecuteReader();
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception(string.Format("Cannot run the query. Msg {0}, State {1}, Line {2}. {3}",
+                    ex.Number, ex.State, ex.LineNumber, ex.Message), ex);
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception(string.Format("Cannot run the query. Code {0}, State {1}, Number {2}. {3}",
+                    ex.Code, ex.SqlState, ex.Number, ex.Message), ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Cannot run the query. " + ex.Message, ex);
             }
         }
 
-        public List<object> ReadAllRecords(IDataReader reader)
+        private IEnumerable<object> AsEnumerable(IDataReader reader)
         {
-            List<object> items = new List<object>();
             while (reader.Read())
             {
                 var item = new Object();
@@ -138,13 +200,11 @@ namespace BlendedJS.Sql
                     item[reader.GetName(i)] = value;
                 }
 
-                items.Add(item);
+                yield return item;
             }
-
-            return items;
         }
 
-        public void AddParameters(IDbCommand command, IDictionary<string,object> parameters)
+        private void AddParameters(IDbCommand command, IDictionary<string,object> parameters)
         {
             if (parameters != null)
             {
@@ -152,10 +212,17 @@ namespace BlendedJS.Sql
                 {
                     var dbParameter = command.CreateParameter();
                     dbParameter.ParameterName = "@" + parameter.Key;
-                    dbParameter.Value = parameter.Value ?? DBNull.Value;
+                    dbParameter.Value = parameter.Value.MapDotNetType() ?? DBNull.Value;
                     command.Parameters.Add(dbParameter);
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _dbTransaction?.Dispose();
+            _connection?.Dispose();
+            _dbCommands?.ForEach(x => x?.Dispose());
         }
     }
 }

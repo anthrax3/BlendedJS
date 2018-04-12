@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using MongoDB.Bson.Serialization;
 using BlendedJS.Mongo;
+using BlendedJS.Types;
 
 namespace BlendedJS
 {
@@ -152,11 +153,23 @@ namespace BlendedJS
                 return null;
 
             string text = obj.ToStringOrDefault();
-            if (obj is IDictionary<string, object>)
-                text = JsonConvert.SerializeObject(obj);
-            if (obj is object[])
-                text = JsonConvert.SerializeObject(obj);
+            if (obj is IDictionary<string, object> || obj is object[])
+            {
+                text = obj.ToJsonOrDefault();
+            }
+
             return text;
+        }
+
+        public static string ToJsonOrDefault(this object obj)
+        {
+            if (obj == null)
+                return null;
+            return Newtonsoft.Json.JsonConvert.SerializeObject(obj,
+                new BsonObjectIdConverter(),
+                new BsonISODateConverter(),
+                new DecimalJsonConverter(),
+                new TypesJsonConverter());
         }
 
         public static BsonDocument ToBsonDocument(this object value)
@@ -171,7 +184,7 @@ namespace BlendedJS
             }
             else
             {
-                string bson = Newtonsoft.Json.JsonConvert.SerializeObject(value, new BsonObjectIdConverter(), new BsonISODateConverter());
+                string bson = value.ToJsonOrDefault();
                 bsonDocument = BsonSerializer.Deserialize<BsonDocument>(bson);
             }
 
