@@ -216,3 +216,14 @@ console.log(item); // [{Id:1, Name:'John'}]
   
   sqlClient.rollback(...);
 ```
+
+## Error handling
+ In case of any error, the client throws error. You have to use try-catch statement to handle them.
+ ```javascript
+ try {
+   var sqlClient = new  SqlClient({provider:'MySql',connectionString:'Server=blabla;Database=blabla;UID=blabla;PASSWORD=blabla;'});
+   sqlClient.connect();
+ } catch(err) {
+   console.log(err); // Cannot connect to the database......
+ }
+```
