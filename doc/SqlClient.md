@@ -151,7 +151,6 @@
     parameters:{Id:1}
   });
   console.log(rows);   // [{Id:1, Name:'John'}]
- 
 ```
 
 ## Run Cursor
@@ -185,3 +184,35 @@ cursor.close();
 console.log(item); // [{Id:1, Name:'John'}]
 ```
 
+ ## Connect and End
+ When the query or cursor is run, the client connects to the database automaticaly, and the connection is close when the script is finished. Behaviour can be controlled with connect() and end() methods.
+ ```javascript
+  sqlClient.connect();
+  
+  sqlClient.query(...);
+  
+  sqlClient.end();
+```
+
+## Transactions
+ To run several queries in transaction, first you need to connect and then start transaction. After running the queries, commit it.
+ ```javascript
+  sqlClient.connect();
+  sqlClient.transaction();
+  
+  sqlClient.query('INSERT ...');
+  sqlClient.query('UPDATE ...');
+  
+  sqlClient.commit(...);
+```
+
+ Transaction can also be rollback at any point.
+ ```javascript
+  sqlClient.connect();
+  sqlClient.transaction();
+  
+  sqlClient.query('INSERT ...');
+  sqlClient.query('UPDATE ...');
+  
+  sqlClient.rollback(...);
+```
