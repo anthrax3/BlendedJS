@@ -132,28 +132,47 @@
 ```
 
 
- #### Run SQL
+ ### Run Select Query
+ - Simple select query
  ```javascript
-  //provider:Sqlite | MySql | SqlServer | PostgreSQL
-  //connectionString: Server=serverAddress;Database=dbName;User Id=user; Password=pass;
-  var sqlClient = new  SqlClient({provider:'Sqlite',connectionString:'Data Source = chinook.db;'});
   var rows = sqlClient.query('select * from employees');
-  console.log(rows);   // [{EmployeeId:1, ...},...]
+  console.log(rows);   // returns array of objects [{Id:1, Name:'John'},{Id:2, Name:'Mike'},...]
 ```
 
- #### Run SQL with parameter
+- Select with parameters
  ```javascript
-  var sqlClient = new  SqlClient({provider:'Sqlite',connectionString:'Data Source = chinook.db;'});
+  // first version
   var rows = sqlClient.query({
-    sql:'select * from employees where EmployeeId=@EmployeeId', 
-    parameters:{EmployeeId:1}
+    sql:'select * from employees where Id=@Id', 
+    parameters:{Id:1}
   });
-  console.log(rows);   // [{EmployeeId:1, ...}]
+  console.log(rows);   // [{Id:1, Name:'John'}]
+ 
+ // second version
+ var rows = sqlClient.query('select * from employees where Id=@Id', {Id:1});
+ console.log(rows);   // returns array of objects [{Id:1, Name:'John'}]
 ```
 
- #### Run SQL with parameter (other version)
+### Run Cursor
+- Read records using hasNext() and next() methods.
  ```javascript
-  var sqlClient = new  SqlClient({provider:'Sqlite',connectionString:'Data Source = chinook.db;'});
-  var row = sqlClient.query('select * from employees where EmployeeId=@EmployeeId', {EmployeeId:1});
-  console.log(row);   // [{EmployeeId:1, ...}]
+ var cursor = sqlClient.cursor('select * from employees');
+ var items = [];
+ while(cursor.hasNext())
+ {
+   var item = cursor.next();
+   items.push(item);
+ }
+ cursor.close();
+ console.log(items); returns array of objects [{Id:1, Name:'John'},{Id:2, Name:'Mike'},...]
 ```
+
+- Read records using each(function(){}) method
+ ```javascript
+var cursor = sqlClient.cursor('select * from employees where Id=@Id', {Id:1});
+var items = [];
+cursor.each(function(item) {items.push(item)});
+cursor.close();
+console.log(items); returns array with one object [{Id:1, Name:'John'}]
+```
+
