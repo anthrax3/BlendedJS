@@ -96,15 +96,18 @@ namespace BlendedJS.Sql
         public void transaction()
         {
             if (_connection == null)
-                throw new Exception("Cannot begin transactoin. Connection is closed");
+                throw new Exception("Cannot begin transaction. Connection is closed");
+
+            if (_dbTransaction != null)
+                throw new Exception("Cannot begin transaction. Transaction is already started");
 
             _dbTransaction = _connection.BeginTransaction();
         }
 
         public void commit()
         {
-            if (_connection == null)
-                throw new Exception("Cannot commit transactoin. Transaction is not begun");
+            if (_dbTransaction == null)
+                throw new Exception("Cannot commit transaction. Transaction is not begun");
 
             _dbTransaction?.Commit();
             _dbTransaction = null;
@@ -112,8 +115,8 @@ namespace BlendedJS.Sql
 
         public void rollback()
         {
-            if (_connection == null)
-                throw new Exception("Cannot rollback transactoin. Transaction is not begun");
+            if (_dbTransaction == null)
+                throw new Exception("Cannot rollback transaction. Transaction is not begun");
 
             _dbTransaction?.Rollback();
             _dbTransaction = null;
