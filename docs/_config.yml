@@ -1,0 +1,9 @@
+plugins:
+  - jekyll-redirect-from
+  - jekyll-readme-index
+  
+gems:
+  - jekyll-readme-index
+  
+sidebars:
+  - generic
