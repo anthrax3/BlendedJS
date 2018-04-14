@@ -203,7 +203,7 @@ console.log(item); // [{Id:1, Name:'John'}]
   sqlClient.query('INSERT ...');
   sqlClient.query('UPDATE ...');
   
-  sqlClient.commit(...);
+  sqlClient.commit();
 ```
 
  Transaction can also be rollback at any point.
@@ -214,7 +214,7 @@ console.log(item); // [{Id:1, Name:'John'}]
   sqlClient.query('INSERT ...');
   sqlClient.query('UPDATE ...');
   
-  sqlClient.rollback(...);
+  sqlClient.rollback();
 ```
 
 ## Error handling
