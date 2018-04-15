@@ -130,8 +130,17 @@ var httpClient = new HttpClient();
 var response = httpClient.head({
  url:'https://jsonplaceholder.typicode.com/posts/1'
  });
-var responseStatus = JSON.parse(response.body);
 console.log(responseStatus);
+//{
+//  "statusCode": 200,
+//  "reasonPhrase": "OK",
+//  "body": "",
+//  "headers": {
+//    "Cache-Control": "public, max-age=14400",
+//    "Connection": "keep-alive",
+//    "Date": "Sun, 15 Apr 2018 13:06:40 GMT"
+//  }
+//}
 ```
 
 ## Send
