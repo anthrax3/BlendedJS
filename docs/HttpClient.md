@@ -26,8 +26,27 @@ var response = httpClient.get({
   url:'https://jsonplaceholder.typicode.com/posts',
   headers: {'Content-Type':'application/json'}
  });
-var posts = JSON.parse(response.body);
-console.log(posts);
+response.bodyJson = JSON.parse(response.body);                        
+console.log(response);
+//{
+//  "statusCode": 200,
+//  "reasonPhrase": "OK",
+//  "body": "[\n  {\n    \"userId\": 1,\n    \"id\": 1,\n    \"title\": \"sunt aut facere repellat provident occaecati ...",
+//  "headers": {
+//    "Connection": "keep-alive",
+//    "Date": "Sun, 15 Apr 2018 12:41:51 GMT",
+//    "Pragma": "no-cache"
+//  },
+//  "bodyJson": [
+//    {
+//      "userId": 1,
+//      "id": 1,
+//      "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+//      ...
+//    },
+//    ...
+//  ]
+//}
 ```
 
 ## Post
