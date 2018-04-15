@@ -58,8 +58,21 @@ var response = httpClient.post({
   headers: {'Content-Type':'application/json'},
   body: { userId: 1, title: 'bla', body: 'bla bla bla'}
   });
-var responseStatus = JSON.parse(response.body);
-console.log(responseStatus);
+response.bodyJson = JSON.parse(response.body);                        
+console.log(response);
+//{
+//  "statusCode": 201,
+//  "reasonPhrase": "Created",
+//  "body": "{\n  \"id\": 101\n}",
+//  "headers": {
+//    "Cache-Control": "no-cache",
+//    "Connection": "keep-alive",
+//    "Date": "Sun, 15 Apr 2018 12:46:32 GMT"
+//  },
+//  "bodyJson": {
+//    "id": 101
+//  }
+//}
 ```
 
 ## Put
@@ -71,8 +84,21 @@ var response = httpClient.put({
   headers: {'Content-Type':'application/json'},
   body: { userId: 1, title: 'bla', body: 'bla bla bla'}
   });
-var responseStatus = JSON.parse(response.body);
-console.log(responseStatus);
+response.bodyJson = JSON.parse(response.body);                        
+console.log(response);
+//{
+//  "statusCode": 200,
+//  "reasonPhrase": "OK",
+//  "body": "{\n  \"id\": 1\n}",
+//  "headers": {
+//    "Cache-Control": "no-cache",
+//    "Connection": "keep-alive",
+//    "Date": "Sun, 15 Apr 2018 12:48:14 GMT"
+//  },
+//  "bodyJson": {
+//    "id": 1
+//  }
+//}
 ```
 
 ## Delete
@@ -82,8 +108,19 @@ var httpClient = new HttpClient();
 var response = httpClient.delete({
  url:'https://jsonplaceholder.typicode.com/posts/1'
  });
-var responseStatus = JSON.parse(response.body);
-console.log(responseStatus);
+response.bodyJson = JSON.parse(response.body);                        
+console.log(response);
+//{
+//  "statusCode": 200,
+//  "reasonPhrase": "OK",
+//  "body": "{}",
+//  "headers": {
+//    "Cache-Control": "no-cache",
+//    "Connection": "keep-alive",
+//    "Date": "Sun, 15 Apr 2018 12:49:52 GMT"
+//  },
+//  "bodyJson": {}
+//}
 ```
 
 ## Head
