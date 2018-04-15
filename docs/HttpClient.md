@@ -148,10 +148,19 @@ console.log(responseStatus);
 ```javascript
 var httpClient = new HttpClient();
 var response = httpClient.send({
- method:'HEAD'
- url:'https://jsonplaceholder.typicode.com/posts/1'
- });
-var responseStatus = JSON.parse(response.body);
-console.log(responseStatus);
+  url:'https://jsonplaceholder.typicode.com/posts/1',
+  method:'head'
+});
+console.log(response);
+//{
+//  "statusCode": 200,
+//  "reasonPhrase": "OK",
+//  "body": "",
+//  "headers": {
+//    "Cache-Control": "public, max-age=14400",
+//    "Connection": "keep-alive",
+//    "Date": "Sun, 15 Apr 2018 13:10:00 GMT"
+//  }
+//}
 ```
 
