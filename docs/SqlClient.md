@@ -184,6 +184,14 @@ cursor.close();
 console.log(item); // [{Id:1, Name:'John'}]
 ```
 
+## Multiline quries
+Use grave accent to write multilines queries
+ ```javascript
+ var rows = sqlClient.query(`select * 
+ from employees`);
+ console.log(rows);   // [{Id:1, Name:'John'},{Id:2, Name:'Mike'},...]
+```
+ 
  ## Connect and End
  When the query or cursor is run, the client connects to the database automaticaly, and the connection is close when the script is finished. Behaviour can be controlled with connect() and end() methods.
  ```javascript
