@@ -13,13 +13,21 @@ namespace BlendedJS.Tests.Http
             BlendedJSEngine engine = new BlendedJSEngine();
             var result = engine.ExecuteScript(
                 @"
-                    var httpClient = new HttpClient();
-                    httpClient.get({url:'https://www.theguardian.com'});
-                ").Value as HttpResponse;
-            Assert.AreEqual(200, result.statusCode);
-            Assert.AreEqual("OK", result.reasonPhrase);
-            Assert.IsTrue(result.body.ToString().Contains("theguardian"));
-            Assert.AreEqual("keep-alive", result.headers.GetProperty("Connection"));
+                    function main()
+                    {
+                        var httpClient = new HttpClient();
+                        var response = httpClient.get({url:'https://www.theguardian.com'});
+                        console.log(response);
+                        return response;
+                    }
+                    main();
+                ");
+            System.Console.WriteLine(result.ConsoleTest);
+            HttpResponse response = result.Value as HttpResponse;
+            Assert.AreEqual(200, response.statusCode);
+            Assert.AreEqual("OK", response.reasonPhrase);
+            Assert.IsTrue(response.body.ToString().Contains("theguardian"));
+            Assert.AreEqual("keep-alive", response.headers.GetProperty("Connection"));
         }
 
         [TestMethod]
@@ -28,14 +36,25 @@ namespace BlendedJS.Tests.Http
             BlendedJSEngine engine = new BlendedJSEngine();
             var result = engine.ExecuteScript(
                 @"
-                    var httpClient = new HttpClient();
-                    var response = httpClient.get({
-                        url:'https://jsonplaceholder.typicode.com/posts',
-                        headers: {'Content-Type':'application/json'}
-                    });
-                    JSON.parse(response.body);
-                ").Value as object[];
-            Assert.AreEqual((double)1, result[0].GetProperty("userId"));
+                    function main()
+                    {
+                        var httpClient = new HttpClient();
+                        var response = httpClient.get({
+                            url:'https://jsonplaceholder.typicode.com/posts',
+                            headers: {'Content-Type':'application/json'}
+                        });
+                        response.bodyJson = JSON.parse(response.body);                        
+                        console.log(response);
+                        return response;
+                    }
+                    main();
+                ");
+            System.Console.WriteLine(result.ConsoleTest);
+            HttpResponse response = result.Value as HttpResponse;
+            Assert.AreEqual(200, response.statusCode);
+            Assert.AreEqual("OK", response.reasonPhrase);
+            object[] posts = response.GetProperty("bodyJson") as object[];
+            Assert.AreEqual((double)1, posts[0].GetProperty("userId"));
         }
 
         [TestMethod]
@@ -44,11 +63,22 @@ namespace BlendedJS.Tests.Http
             BlendedJSEngine engine = new BlendedJSEngine();
             var result = engine.ExecuteScript(
                 @"
-                    var httpClient = new HttpClient();
-                    var response = httpClient.get('https://jsonplaceholder.typicode.com/posts');
-                    JSON.parse(response.body);
-                ").Value as object[];
-            Assert.AreEqual((double)1, result[0].GetProperty("userId"));
+                    function main()
+                    {
+                        var httpClient = new HttpClient();
+                        var response = httpClient.get('https://jsonplaceholder.typicode.com/posts');
+                        response.bodyJson = JSON.parse(response.body);                        
+                        console.log(response);
+                        return response;
+                    }
+                    main();
+                ");
+            System.Console.WriteLine(result.ConsoleTest);
+            HttpResponse response = result.Value as HttpResponse;
+            Assert.AreEqual(200, response.statusCode);
+            Assert.AreEqual("OK", response.reasonPhrase);
+            object[] posts = response.GetProperty("bodyJson") as object[];
+            Assert.AreEqual((double)1, posts[0].GetProperty("userId"));
         }
 
         [TestMethod]
@@ -57,15 +87,26 @@ namespace BlendedJS.Tests.Http
             BlendedJSEngine engine = new BlendedJSEngine();
             var result = engine.ExecuteScript(
                 @"
-                    var httpClient = new HttpClient();
-                    var response = httpClient.post({
-                        url:'https://jsonplaceholder.typicode.com/posts',
-                        headers: {'Content-Type':'application/json'},
-                        body: { userId: 1, title: 'bla', body: 'bla bla bla'}
-                    });
-                    JSON.parse(response.body);
-                ").Value;
-            Assert.AreEqual((double)101, result.GetProperty("id"));
+                    function main()
+                    {
+                        var httpClient = new HttpClient();
+                        var response = httpClient.post({
+                            url:'https://jsonplaceholder.typicode.com/posts',
+                            headers: {'Content-Type':'application/json'},
+                            body: { userId: 1, title: 'bla', body: 'bla bla bla'}
+                        });
+                        response.bodyJson = JSON.parse(response.body);                        
+                        console.log(response);
+                        return response;
+                    }
+                    main();
+                ");
+            System.Console.WriteLine(result.ConsoleTest);
+            HttpResponse response = result.Value as HttpResponse;
+            Assert.AreEqual(201, response.statusCode);
+            Assert.AreEqual("Created", response.reasonPhrase);
+            object created = response.GetProperty("bodyJson");
+            Assert.AreEqual((double)101, (double)created.GetProperty("id"));
         }
 
         [TestMethod]
@@ -74,15 +115,26 @@ namespace BlendedJS.Tests.Http
             BlendedJSEngine engine = new BlendedJSEngine();
             var result = engine.ExecuteScript(
                 @"
-                    var httpClient = new HttpClient();
-                    var response = httpClient.put({
-                        url:'https://jsonplaceholder.typicode.com/posts/1',
-                        headers: {'Content-Type':'application/json'},
-                        body: { userId: 1, title: 'bla', body: 'bla bla bla'}
-                    });
-                    JSON.parse(response.body);
-                ").Value;
-            Assert.AreEqual((double)1, result.GetProperty("id"));
+                    function main()
+                    {
+                        var httpClient = new HttpClient();
+                        var response = httpClient.put({
+                            url:'https://jsonplaceholder.typicode.com/posts/1',
+                            headers: {'Content-Type':'application/json'},
+                            body: { userId: 1, title: 'bla', body: 'bla bla bla'}
+                        });
+                        response.bodyJson = JSON.parse(response.body);                        
+                        console.log(response);
+                        return response;
+                    }
+                    main();
+                ");
+            System.Console.WriteLine(result.ConsoleTest);
+            HttpResponse response = result.Value as HttpResponse;
+            Assert.AreEqual(200, response.statusCode);
+            Assert.AreEqual("OK", response.reasonPhrase);
+            object updated = response.GetProperty("bodyJson");
+            Assert.AreEqual((double)1, (double)updated.GetProperty("id"));
         }
 
         [TestMethod]
@@ -91,14 +143,74 @@ namespace BlendedJS.Tests.Http
             BlendedJSEngine engine = new BlendedJSEngine();
             var result = engine.ExecuteScript(
                 @"
-                    var httpClient = new HttpClient();
-                    httpClient.delete({
-                        url:'https://jsonplaceholder.typicode.com/posts/1'
-                    });
-                ").Value as HttpResponse;
-            Assert.AreEqual(200, result.statusCode);
-            Assert.AreEqual("OK", result.reasonPhrase);
-            Assert.AreEqual("{}", result.body);
+                    function main()
+                    {
+                        var httpClient = new HttpClient();
+                        var response = httpClient.delete({
+                            url:'https://jsonplaceholder.typicode.com/posts/1'
+                        });
+                        response.bodyJson = JSON.parse(response.body);                        
+                        console.log(response);
+                        return response;
+                    }
+                    main();
+                ");
+            System.Console.WriteLine(result.ConsoleTest);
+            HttpResponse response = result.Value as HttpResponse;
+            Assert.AreEqual(200, response.statusCode);
+            Assert.AreEqual("OK", response.reasonPhrase);
+            Assert.AreEqual("{}", response.body);
+            object deleted = response.GetProperty("bodyJson");
+            Assert.IsNotNull(deleted);
+        }
+
+        [TestMethod]
+        public void Head_Json()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
+                @"
+                    function main()
+                    {
+                        var httpClient = new HttpClient();
+                        var response = httpClient.head({
+                            url:'https://jsonplaceholder.typicode.com/posts/1'
+                        });
+                        console.log(response);
+                        return response;
+                    }
+                    main();
+                ");
+            System.Console.WriteLine(result.ConsoleTest);
+            HttpResponse response = result.Value as HttpResponse;
+            Assert.AreEqual(200, response.statusCode);
+            Assert.AreEqual("OK", response.reasonPhrase);
+            Assert.AreEqual("", response.body);
+        }
+
+        [TestMethod]
+        public void Send_Head()
+        {
+            BlendedJSEngine engine = new BlendedJSEngine();
+            var result = engine.ExecuteScript(
+                @"
+                    function main()
+                    {
+                        var httpClient = new HttpClient();
+                        var response = httpClient.send({
+                            url:'https://jsonplaceholder.typicode.com/posts/1',
+                            method:'head'
+                        });
+                        console.log(response);
+                        return response;
+                    }
+                    main();
+                ");
+            System.Console.WriteLine(result.ConsoleTest);
+            HttpResponse response = result.Value as HttpResponse;
+            Assert.AreEqual(200, response.statusCode);
+            Assert.AreEqual("OK", response.reasonPhrase);
+            Assert.AreEqual("", response.body);
         }
 
         [TestMethod]
@@ -123,13 +235,19 @@ namespace BlendedJS.Tests.Http
             BlendedJSEngine engine = new BlendedJSEngine();
             var result = engine.ExecuteScript(
                 @"
-                    var httpClient = new HttpClient();
-                    httpClient.get('http://example.com/asdf/asdf/asfd');
-                ").Value as HttpResponse;
-            Assert.AreEqual(404, result.statusCode);
-            Assert.AreEqual("Not Found", result.reasonPhrase);
-
-
+                    function main()
+                    {
+                        var httpClient = new HttpClient();
+                        var response = httpClient.get('http://example.com/asdf/asdf/asfd');
+                        console.log(response);
+                        return response;
+                    }
+                    main();
+                ");
+            System.Console.WriteLine(result.ConsoleTest);
+            HttpResponse response = result.Value as HttpResponse;
+            Assert.AreEqual(404, response.statusCode);
+            Assert.AreEqual("Not Found", response.reasonPhrase);
         }
     }
 }
