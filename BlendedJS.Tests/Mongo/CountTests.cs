@@ -16,7 +16,7 @@ namespace BlendedJS.Tests.Mongo
             var results = mongo.ExecuteScript(
                 @"
                 var db = new MongoClient(this.mongoConnectionString);
-                db.bios.count()
+                db.bios.count();
                 ");
             System.Console.Write(results.ConsoleTest);
             int count = Convert.ToInt32(results.Value);

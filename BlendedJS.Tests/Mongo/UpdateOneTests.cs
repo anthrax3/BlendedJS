@@ -74,7 +74,7 @@ namespace BlendedJS.Tests.Mongo
             Assert.AreEqual(true, result.acknowledged);
             Assert.AreEqual((Int64)0, result.matchedCount);
             Assert.AreEqual((Int64)0, result.modifiedCount);
-            Assert.AreEqual(MongoDB.Bson.BsonDouble.Create(4), result.upsertedId);
+            Assert.AreEqual(MongoDB.Bson.BsonInt32.Create(4), result.upsertedId);
         }
 
         [TestMethod]

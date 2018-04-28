@@ -11,7 +11,7 @@ using static MongoDB.Driver.WriteConcern;
 
 namespace BlendedJS.Mongo
 {
-    public class MongoCollection : BaseObject
+    public class MongoCollection
     {
         private string _name;
         private IMongoCollection<BsonDocument> _collection;
@@ -51,7 +51,10 @@ namespace BlendedJS.Mongo
 
         public object findOne(object filter, object projection)
         {
-            return _collection.Find(filter.ToBsonDocument()).Project(projection.ToBsonDocument());
+            return _collection
+                .Find(filter.ToBsonDocument())
+                .Project(projection.ToBsonDocument())
+                .FirstOrDefault();
         }
 
         public object findOneAndDelete(object filter)
