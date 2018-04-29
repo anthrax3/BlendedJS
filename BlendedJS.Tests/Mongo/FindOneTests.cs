@@ -36,7 +36,7 @@ namespace BlendedJS.Tests.Mongo
                     db.bios.findOne(
                        {
                          $or: [
-                                { 'name.first' : /^D/ },
+                                { 'name.first' : {'$regex': 'Gr'}},
                                 { birth: { $lt: new Date('1940-01-01') } }
                               ]
                        }

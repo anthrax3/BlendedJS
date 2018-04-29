@@ -36,7 +36,9 @@ namespace BlendedJS.Mongo
 
         public object find(object filter, object projection)
         {
-            return new Cursor(_collection.Find(filter.ToBsonDocument()).Project(projection.ToBsonDocument()), _console);
+            return 
+                new MongoCursor(_collection.Find(filter.ToBsonDocument())
+                .Project(projection.ToBsonDocument()), _console);
         }
 
         public object findOne()
@@ -297,7 +299,7 @@ namespace BlendedJS.Mongo
                 fieldDefinition,
                 query.ToBsonDocument(),
                 distinctOptions);
-            return new EvaluatedCursor<object>(cursor);
+            return new MongoEvaluatedCursor<object>(cursor);
         }
 
         public object aggregate(object pipeline)
@@ -330,7 +332,7 @@ namespace BlendedJS.Mongo
 
             var stages = ((Array)filter).OfType<object>().Select(x => x.ToBsonDocument());
             var pipeline = new BsonDocumentStagePipelineDefinition<BsonDocument, BsonDocument>(stages);
-            return new EvaluatedCursor<BsonDocument>(this._collection.Aggregate(pipeline, aggregateOptions));
+            return new MongoEvaluatedCursor<BsonDocument>(this._collection.Aggregate(pipeline, aggregateOptions));
         }
 
         public void drop()
@@ -488,7 +490,7 @@ namespace BlendedJS.Mongo
                 }
             }
 
-                return new EvaluatedCursor<BsonDocument>(
+                return new MongoEvaluatedCursor<BsonDocument>(
                     _collection.MapReduce<BsonDocument>(
                         new BsonJavaScript(map.ToStringOrDefault()),
                         new BsonJavaScript(reduce.ToStringOrDefault()),

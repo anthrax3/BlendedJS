@@ -7,29 +7,31 @@ using System.Collections;
 
 namespace BlendedJS.Mongo
 {
-    public class Cursor : IEnumerable<BsonDocument>
+    public class MongoCursor : MongoEvaluatedCursor<BsonDocument>
     {
         private Console _console;
         private IFindFluent<BsonDocument, BsonDocument> _documents;
-        public Cursor(IFindFluent<BsonDocument, BsonDocument> documents, Console console)
+
+        public MongoCursor(IFindFluent<BsonDocument, BsonDocument> documents, Console console) 
+            : base(() => documents.ToCursor())
         {
             _console = console;
             _documents = documents;
         }
 
-        public Cursor limit(int limit)
+        public MongoCursor limit(int limit)
         {
-            return new Cursor(_documents.Limit(limit), _console);
+            return new MongoCursor(_documents.Limit(limit), _console);
         }
 
-        public Cursor skip(int skip)
+        public MongoCursor skip(int skip)
         {
-            return new Cursor(_documents.Skip(skip), _console);
+            return new MongoCursor(_documents.Skip(skip), _console);
         }
 
-        public Cursor sort(object sort)
+        public MongoCursor sort(object sort)
         {
-            var mongoFind = new Cursor(_documents.Sort(sort.ToBsonDocument()), _console);
+            var mongoFind = new MongoCursor(_documents.Sort(sort.ToBsonDocument()), _console);
             return mongoFind;
         }
 
@@ -38,7 +40,7 @@ namespace BlendedJS.Mongo
             return _documents.Count();
         }
 
-        public Cursor collation(object collation)
+        public MongoCursor collation(object collation)
         {
             string locale = collation.GetProperty("locale").ToStringOrDefault();
 
@@ -84,45 +86,9 @@ namespace BlendedJS.Mongo
             return this;
         }
 
-        public void forEach(Action<object> processor)
-        {
-            _documents.ToCursor().ForEachAsync(x =>
-            {
-                processor((object)x.ToDictionary().ToJsObject());
-            });
-        }
-
-        private IEnumerator<BsonDocument> _cursor;
-        public bool hasNext()
-        {
-            if (_cursor == null)
-                _cursor = _documents.ToCursor().ToEnumerable().GetEnumerator();
-            return _cursor.MoveNext();
-        }
-
-        public object next()
-        {
-            return _cursor?.Current.ToDictionary().ToJsObject();
-        }
-
-        public object[] toArray()
-        {
-            return _documents.ToList().Select(x => (object)x.ToDictionary().ToJsObject()).ToArray();
-        }
-
         public void noCursorTimeout()
         {
             _documents.Options.NoCursorTimeout = false;
-        }
-
-        public IEnumerator<BsonDocument> GetEnumerator()
-        {
-            return _documents.ToEnumerable().GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _documents.ToEnumerable().GetEnumerator();
         }
     }
 }

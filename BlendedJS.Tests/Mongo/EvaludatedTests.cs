@@ -24,7 +24,7 @@ namespace BlendedJS.Tests.Mongo
                      { $sort: { total: -1 } }
                    ])");
 
-            var items = ((EvaluatedCursor<BsonDocument>)results.Value).ToList();
+            var items = ((MongoEvaluatedCursor<BsonDocument>)results.Value).ToList();
             Assert.AreEqual(2, items.Count);
         }
 
@@ -47,7 +47,7 @@ namespace BlendedJS.Tests.Mongo
                         allowDiskUse: true
                     }
                    )");
-            var items = ((EvaluatedCursor<BsonDocument>)results.Value).ToList();
+            var items = ((MongoEvaluatedCursor<BsonDocument>)results.Value).ToList();
             Assert.AreEqual(5, items.Count);
         }
 
@@ -72,7 +72,7 @@ namespace BlendedJS.Tests.Mongo
                             cursor: { batchSize: 0 }
                         }
                    )");
-            var items = ((EvaluatedCursor<BsonDocument>)results.Value).ToList();
+            var items = ((MongoEvaluatedCursor<BsonDocument>)results.Value).ToList();
             Assert.AreEqual(2, items.Count);
         }
     }
