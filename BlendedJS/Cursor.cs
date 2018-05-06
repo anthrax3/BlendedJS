@@ -6,7 +6,11 @@ using System.Text;
 
 namespace BlendedJS
 {
-    public class Cursor : JsObject
+    public interface ICursor : IEnumerable<object>
+    {
+    }
+
+    public class Cursor : JsObject, ICursor
     {
         private IEnumerable<object> _enumerable;
         private IEnumerator<object> _enumerator;
@@ -79,28 +83,20 @@ namespace BlendedJS
                 callback(item);
         }
 
-        public virtual void each(Action<object, object> callback)
+        public virtual void forEach(Action<object> callback)
         {
             foreach (object item in _enumerable)
-                callback(item, null);
+                callback(item);
         }
 
-        public virtual void each(Action<object, object, object> callback)
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            foreach (object item in _enumerable)
-                callback(item, null, null);
+            return _enumerable.GetEnumerator();
         }
 
-        public virtual void each(Action<object, object, object, object> callback)
+        IEnumerator<object> IEnumerable<object>.GetEnumerator()
         {
-            foreach (object item in _enumerable)
-                callback(item, null, null, null);
-        }
-
-        public virtual void each(Action<object, object, object, object, object> callback)
-        {
-            foreach (object item in _enumerable)
-                callback(item, null, null, null, null);
+            return _enumerable.GetEnumerator();
         }
     }
 }

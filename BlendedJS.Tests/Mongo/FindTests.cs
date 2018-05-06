@@ -21,7 +21,7 @@ namespace BlendedJS.Tests.Mongo
                     db.collection.find({ qty: { $gt: 4 } })
                 ");
 
-            var items = ((IEnumerable<BsonDocument>)results.Value).ToList();
+            var items = ((IEnumerable<object>)results.Value).ToList();
             Assert.AreEqual(2, items.Count);
         }
 
@@ -38,7 +38,7 @@ namespace BlendedJS.Tests.Mongo
                     db.bios.find();
                 ");
 
-            var items = ((IEnumerable<BsonDocument>)results.Value).ToList();
+            var items = ((IEnumerable<object>)results.Value).ToList();
             Assert.AreEqual(10, items.Count);
         }
 
@@ -55,7 +55,7 @@ namespace BlendedJS.Tests.Mongo
                     db.bios.find( { _id: 5 } )
                 ");
 
-            var items = ((IEnumerable<BsonDocument>)results.Value).ToList();
+            var items = ((IEnumerable<object>)results.Value).ToList();
             Assert.AreEqual(1, items.Count);
         }
 
@@ -71,7 +71,7 @@ namespace BlendedJS.Tests.Mongo
                     var db = new MongoClient(this.mongoConnectionString);
                     db.bios.find( { _id: ObjectId(""51e062189c6ae665454e301d"") } );
                 ");
-            var items = ((IEnumerable<BsonDocument>)results.Value).ToList();
+            var items = ((IEnumerable<object>)results.Value).ToList();
             Assert.AreEqual(1, items.Count);
         }
 
@@ -88,7 +88,7 @@ namespace BlendedJS.Tests.Mongo
                     db.bios.find({_id: { $in: [ 5,  ObjectId(""51e062189c6ae665454e301d"") ] }})
                 ");
 
-            var items = ((IEnumerable<BsonDocument>)results.Value).ToList();
+            var items = ((IEnumerable<object>)results.Value).ToList();
             Assert.AreEqual(2, items.Count);
         }
 
@@ -105,7 +105,7 @@ namespace BlendedJS.Tests.Mongo
                     db.students.find( { score: { $gt: 0, $lt: 2 } } );
                 ");
 
-            var items = ((IEnumerable<BsonDocument>)results.Value).ToList();
+            var items = ((IEnumerable<object>)results.Value).ToList();
             Assert.AreEqual(2, items.Count);
         }
 
@@ -131,7 +131,7 @@ namespace BlendedJS.Tests.Mongo
                     )
                 ");
 
-            var items = ((IEnumerable<BsonDocument>)results.Value).ToList();
+            var items = ((IEnumerable<object>)results.Value).ToList();
             Assert.AreEqual(3, items.Count);
         }
 
@@ -155,7 +155,7 @@ namespace BlendedJS.Tests.Mongo
                     )
                     ");
 
-            var items = ((IEnumerable<BsonDocument>)results.Value).ToList();
+            var items = ((IEnumerable<object>)results.Value).ToList();
             Assert.AreEqual(0, items.Count);
         }
 
@@ -177,7 +177,7 @@ namespace BlendedJS.Tests.Mongo
                     )
                 ");
 
-            var items = ((IEnumerable<BsonDocument>)results.Value).ToList();
+            var items = ((IEnumerable<object>)results.Value).ToList();
             Assert.AreEqual(1, items.Count);
         }
 
@@ -197,13 +197,12 @@ namespace BlendedJS.Tests.Mongo
                     )
                 ");
 
-            var items = ((IEnumerable<BsonDocument>)results.Value).ToList();
+            var items = ((IEnumerable<object>)results.Value).ToList();
             Assert.AreEqual(10, items.Count);
             foreach(var item in items)
             {
-                Assert.AreEqual(2, item.ElementCount);
-                Assert.IsNotNull(item.GetElement("name"));
-                Assert.IsNotNull(item.GetElement("contribs"));
+                Assert.IsNotNull(item.GetProperty("name"));
+                Assert.IsNotNull(item.GetProperty("contribs"));
             }
         }
 
@@ -228,7 +227,7 @@ namespace BlendedJS.Tests.Mongo
                 ");
 
             Assert.AreEqual(1, results.Logs.Count);
-            Assert.AreEqual("{ \"first\" : \"John\", \"last\" : \"Backus\" }", results.Logs[0].Arg1);
+            Assert.AreEqual("{\"first\":\"John\",\"last\":\"Backus\"}", results.Logs[0].Arg1);
         }
 
         [TestMethod]
@@ -262,10 +261,10 @@ namespace BlendedJS.Tests.Mongo
                     db.bios.find().sort( { name: 1 } )
                 ");
 
-            var items = ((IEnumerable<BsonDocument>)results.Value).ToList();
+            var items = ((IEnumerable<object>)results.Value).ToList();
             Assert.AreEqual(10, items.Count);
-            Assert.AreEqual("{ \"first\" : \"Dennis\", \"last\" : \"Ritchie\" }", items.First().GetElement("name").Value.ToString());
-            Assert.AreEqual("{ \"first\" : \"Yukihiro\", \"aka\" : \"Matz\", \"last\" : \"Matsumoto\" }", items.Last().GetElement("name").Value.ToString());
+            Assert.AreEqual("{\"first\":\"Dennis\",\"last\":\"Ritchie\"}", items.First().GetProperty("name").ToJsonOrString());
+            Assert.AreEqual("{\"first\":\"Yukihiro\",\"aka\":\"Matz\",\"last\":\"Matsumoto\"}", items.Last().GetProperty("name").ToJsonOrString());
         }
 
         [TestMethod]
@@ -281,7 +280,7 @@ namespace BlendedJS.Tests.Mongo
                     db.bios.find().limit( 5 )
                 ");
 
-            var items = ((IEnumerable<BsonDocument>)results.Value).ToList();
+            var items = ((IEnumerable<object>)results.Value).ToList();
             Assert.AreEqual(5, items.Count);
         }
 
@@ -298,7 +297,7 @@ namespace BlendedJS.Tests.Mongo
                     db.bios.find().skip( 8 )
                 ");
 
-            var items = ((IEnumerable<BsonDocument>)results.Value).ToList();
+            var items = ((IEnumerable<object>)results.Value).ToList();
             Assert.AreEqual(2, items.Count);
         }
 
@@ -315,7 +314,7 @@ namespace BlendedJS.Tests.Mongo
                     db.bios.find( { ""name.last"": ""hopper"" } ).collation( { locale: ""en_US"", strength: 1 } );
                 ");
 
-            var items = ((IEnumerable<BsonDocument>)results.Value).ToList();
+            var items = ((IEnumerable<object>)results.Value).ToList();
             Assert.AreEqual(1, items.Count);
         }
 
@@ -330,7 +329,7 @@ namespace BlendedJS.Tests.Mongo
                 @"
                     var db = new MongoClient(this.mongoConnectionString);
                     db.bios.find().sort( { name: 1 } ).limit( 5 )
-                ").Value as IEnumerable<BsonDocument>;
+                ").Value as IEnumerable<object>;
 
 
             Assert.AreEqual(5, results.ToList().Count);

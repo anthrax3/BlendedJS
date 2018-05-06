@@ -7,6 +7,7 @@ using System.Linq;
 using MongoDB.Bson.Serialization;
 using BlendedJS.Mongo;
 using BlendedJS.Types;
+using System.Collections;
 
 namespace BlendedJS
 {
@@ -230,10 +231,38 @@ namespace BlendedJS
             }
         }
 
-        public static IDictionary<string, object> ToJsObject(this IDictionary<string, object> dictionary)
+        public static object ToJsObject(this object obj)
         {
-            return new JsObject(dictionary);
+            if (obj is null)
+            {
+                return null;
+            }
+            if (obj is JsObject)
+            {
+                return obj;
+            }
+            if (obj is IDictionary<string, object> dic)
+            {
+                return new JsObject(dic);
+            }
+            if (obj is IDictionary dic2)
+            {
+                return new JsObject(
+                    dic2
+                        .Cast<DictionaryEntry>()
+                        .ToDictionary(x => x.Key.ToString(), x => x.Value));
+            }
+            if (obj is MongoDB.Bson.BsonDocument bson)
+            {
+                return new JsObject(bson.ToDictionary());
+            }
+            return obj;
         }
+
+        //public static IDictionary<string, object> ToJsObject(this IDictionary<string, object> dictionary)
+        //{
+        //    return new JsObject(dictionary);
+        //}
 
         public static object MapDotNetType(this object obj)
         {

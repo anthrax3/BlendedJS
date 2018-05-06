@@ -8,7 +8,7 @@ using System.Collections;
 
 namespace BlendedJS.Mongo
 {
-    public class MongoEvaluatedCursor<T> : IEnumerable<T> where T : class
+    public class MongoEvaluatedCursor<T> : ICursor where T : class
     {
         private Func<IAsyncCursor<T>> _asyncCursorFactory;
         private IAsyncCursor<T> _asyncCursor;
@@ -23,7 +23,7 @@ namespace BlendedJS.Mongo
         public MongoEvaluatedCursor(IAsyncCursor<T> asyncCursor)
         {
             this._asyncCursor = asyncCursor;
-            this._currentBatch = new Queue<T>(this._asyncCursor.Current ?? new List<T>());
+            this._currentBatch = new Queue<T>();
         }
 
         public bool hasNext()
@@ -50,12 +50,9 @@ namespace BlendedJS.Mongo
                 this._asyncCursor.MoveNext();
                 this._currentBatch = new Queue<T>(this._asyncCursor.Current ?? new List<T>());
             }
-
+  
             var next = _currentBatch.Count > 0 ? _currentBatch.Dequeue() : null;
-            if (typeof(T) is IDictionary<string, object>)
-                return ((IDictionary<string, object>)next).ToJsObject();
-            else
-                return next;
+            return next.ToJsObject();
         }
 
         public int objsLeftInBatch()
@@ -70,10 +67,7 @@ namespace BlendedJS.Mongo
 
             _asyncCursor.ForEachAsync(x => 
             {
-                if (typeof(T) is IDictionary<string, object>)
-                    processor(((IDictionary<string, object>)x).ToJsObject());
-                else
-                    processor(x);
+                processor(x.ToJsObject());
             });
         }
 
@@ -82,10 +76,7 @@ namespace BlendedJS.Mongo
             if (this._asyncCursor == null)
                 this._asyncCursor = _asyncCursorFactory();
 
-            if (typeof(T) is IDictionary<string, object>)
-                return _asyncCursor.ToList().Select(x => (object)((IDictionary<string, object>)x).ToJsObject()).ToArray();
-            else
-                return _asyncCursor.ToList().Cast<object>().ToArray();
+            return _asyncCursor.ToList().Select(x => x.ToJsObject()).ToArray();
         }
 
         public object[] map(Func<object, object> processor)
@@ -93,10 +84,7 @@ namespace BlendedJS.Mongo
             if (this._asyncCursor == null)
                 this._asyncCursor = _asyncCursorFactory();
 
-            if (typeof(T) is IDictionary<string, object>)
-                return _asyncCursor.ToList().Select(x => processor(((IDictionary<string, object>)x).ToJsObject())).ToArray();
-            else
-                return _asyncCursor.ToList().Select(x => processor(x)).ToArray();
+            return _asyncCursor.ToList().Select(x => processor(x.ToJsObject())).ToArray();
         }
 
         public int itcount()
@@ -111,20 +99,20 @@ namespace BlendedJS.Mongo
         {
         }
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            if (this._asyncCursor == null)
-                this._asyncCursor = _asyncCursorFactory();
-
-            return this._asyncCursor.ToEnumerable().GetEnumerator();
-        }
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             if (this._asyncCursor == null)
                 this._asyncCursor = _asyncCursorFactory();
 
-            return this._asyncCursor.ToEnumerable().GetEnumerator();
+            return this._asyncCursor.ToEnumerable().Select(x => x.ToJsObject()).GetEnumerator();
+        }
+
+        public IEnumerator<object> GetEnumerator()
+        {
+            if (this._asyncCursor == null)
+                this._asyncCursor = _asyncCursorFactory();
+
+            return this._asyncCursor.ToEnumerable().Select(x => x.ToJsObject()).GetEnumerator();
         }
     }
 }
