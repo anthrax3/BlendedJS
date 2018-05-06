@@ -9,7 +9,7 @@ using System.Text;
 namespace BlendedJS.Http
 {
     //https://github.com/request/request
-    public class HttpClient : BaseObject
+    public class HttpClient : JsObject
     {
         public HttpClient(object arg1) : this() { }
         public HttpClient(object arg1, object ar2) : this() { }
@@ -143,7 +143,7 @@ namespace BlendedJS.Http
 
         private object ToDictionary(HttpResponseHeaders headers)
         {
-            Object headerObj = new Object();
+            JsObject headerObj = new JsObject();
             foreach (var header in headers)
             {
                 object value = header.Value.Count() > 1 ? 

@@ -5,7 +5,7 @@ using Cassandra;
 
 namespace BlendedJS.Cassandra
 {
-    public class CassandraClient : BaseObject, IDisposable
+    public class CassandraClient : JsObject, IDisposable
     {
         private Cluster _cluster;
         private ISession _session;
@@ -63,7 +63,7 @@ namespace BlendedJS.Cassandra
             var rows = _session.Execute(query.ToStringOrDefault());
             return rows.Select(x =>
             {
-                Object obj = new Object();
+                JsObject obj = new JsObject();
                 foreach (var column in rows.Columns)
                     obj[column.Name] = x[column.Index];
                 return obj;
@@ -77,7 +77,7 @@ namespace BlendedJS.Cassandra
             var rows = _session.Execute(boundStatement);
             return rows.Select(x =>
             {
-                Object obj = new Object();
+                JsObject obj = new JsObject();
                 foreach (var column in rows.Columns)
                     obj[column.Name] = x[column.Index];
                 return obj;

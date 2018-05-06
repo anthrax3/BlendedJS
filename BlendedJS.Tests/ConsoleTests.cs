@@ -75,7 +75,7 @@ bla`);
                     var obj = {id:1, 'name':'dan'};
                     console.log(obj);
                 ");
-            Assert.AreEqual("Line 3: {\"id\":1.0,\"name\":\"dan\"}", result.ConsoleTest);
+            Assert.AreEqual("Line 3: {\"id\":1,\"name\":\"dan\"}", result.ConsoleTest);
         }
 
         [TestMethod]
@@ -161,7 +161,7 @@ bla`);
         {
             BlendedJSEngine engine = new BlendedJSEngine();
             Dictionary<string, object> obj = new Dictionary<string, object>();
-            engine.Jint.SetValue("TestClass", new Func<object>(() => new object[] { new Object(), new Object(), new Object() }));
+            engine.Jint.SetValue("TestClass", new Func<object>(() => new object[] { new JsObject(), new JsObject(), new JsObject() }));
 
             var result = engine.ExecuteScript(
                 @"
@@ -213,7 +213,7 @@ bla`);
                 @"
                     doSomeJob();
                 ");
-            Assert.AreEqual("Line 2: ERROR: bla bla bla", result.ConsoleTest);
+            Assert.AreEqual("Line 2: ERROR, Line 2 :bla bla bla", result.ConsoleTest);
         }
     }
 }

@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.1.8.0</Version>
+    <Version>0.1.9.0</Version>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <AssemblyVersion>0.1.8.0</AssemblyVersion>
-    <FileVersion>0.1.8.0</FileVersion>
+    <AssemblyVersion>0.1.9.0</AssemblyVersion>
+    <FileVersion>0.1.9.0</FileVersion>
     <PackageProjectUrl>https://github.com/danielgolabek/BlendedJS</PackageProjectUrl>
     <RepositoryUrl>https://github.com/danielgolabek/BlendedJS</RepositoryUrl>
     <RepositoryType />

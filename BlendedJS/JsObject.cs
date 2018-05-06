@@ -4,18 +4,21 @@ using System.Text;
 
 namespace BlendedJS
 {
-    public class BaseObject : Dictionary<string, object>
+    public class JsObject : Dictionary<string, object>
     {
-        public BaseObject()
+        public JsObject()
         {
         }
 
-        public BaseObject(IDictionary<string, object> dictionary) : base(dictionary)
+        public JsObject(IDictionary<string, object> dictionary) : base(dictionary)
         {
         }
 
         public override string ToString()
         {
+            if (this.GetType() == typeof(JsObject))
+                return "[object Object]";
+
             return "[object " + this.GetType().Name + "]";
         }
     }

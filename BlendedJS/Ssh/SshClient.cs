@@ -9,7 +9,7 @@ using Renci.SshNet;
 
 namespace BlendedJS.Ssh
 {
-    public class SshClient : BaseObject, IDisposable
+    public class SshClient : JsObject, IDisposable
     {
         private Renci.SshNet.SshClient _client;
         private ForwardedPortLocal _forwardedPort;

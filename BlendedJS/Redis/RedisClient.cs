@@ -9,7 +9,7 @@ using StackExchange.Redis;
 
 namespace BlendedJS.Redis
 {
-    public class RedisClient : BaseObject, IDisposable
+    public class RedisClient : JsObject, IDisposable
     {
         private IDatabase _db;
 

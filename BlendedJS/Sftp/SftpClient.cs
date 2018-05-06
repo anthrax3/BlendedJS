@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BlendedJS.Sftp
 {
-    public class SftpClient : BaseObject, IDisposable
+    public class SftpClient : JsObject, IDisposable
     {
         private Renci.SshNet.SftpClient _client;
         public SftpClient(object options)

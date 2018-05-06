@@ -7,7 +7,7 @@ using FluentFTP;
 
 namespace BlendedJS.Ftp
 {
-    public class FtpClient : BaseObject
+    public class FtpClient : JsObject
     {
         private FluentFTP.FtpClient _client;
         public FtpClient(object options)
@@ -58,7 +58,7 @@ namespace BlendedJS.Ftp
             foreach (FtpListItem item in _client.GetListing(path.ToStringOrDefault()))
             {
                 list.Add(
-                    new Object
+                    new JsObject
                     {
                         {"name", item.Name},
                         {"fullName", item.FullName},

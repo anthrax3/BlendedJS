@@ -1,6 +1,6 @@
 ﻿namespace BlendedJS.Mongo
 {
-    public class ISODate : BaseObject
+    public class ISODate : JsObject
     {
         public string DateTimeString { get; set; }
         public ISODate(string dateTimeString)

@@ -150,7 +150,7 @@ namespace BlendedJS.Tests.Sql
                     sqlClient.query('update employees set FirstName = ""Kowalski"" where EmployeeId=1');
                 ");
                 Assert.IsNotNull(result);
-                Assert.AreEqual(1.0, result.Value);
+                Assert.AreEqual((double)1, result.Value);
             }
         }
 
@@ -165,7 +165,7 @@ namespace BlendedJS.Tests.Sql
                     sqlClient.query('update employees set FirstName = ""Kowalski"" where EmployeeId=123123');
                 ");
                 Assert.IsNotNull(result);
-                Assert.AreEqual(0.0, result.Value);
+                Assert.AreEqual((double)0, result.Value);
             }
         }
 

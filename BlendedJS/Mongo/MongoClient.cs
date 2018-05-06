@@ -6,7 +6,7 @@ using BlendedJS.Mongo;
 
 namespace BlendedJS.Mongo
 {
-    public class MongoClient : BaseObject
+    public class MongoClient : JsObject
     {
         private MongoDB.Driver.MongoClient _client;
         private object _connectionString;

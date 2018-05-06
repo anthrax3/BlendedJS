@@ -6,7 +6,7 @@ using System.Text;
 
 namespace BlendedJS
 {
-    public class Cursor : BaseObject
+    public class Cursor : JsObject
     {
         private IEnumerable<object> _enumerable;
         private IEnumerator<object> _enumerator;

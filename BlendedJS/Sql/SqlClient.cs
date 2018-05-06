@@ -12,7 +12,7 @@ using Npgsql;
 
 namespace BlendedJS.Sql
 {
-    public class SqlClient : BaseObject, IDisposable
+    public class SqlClient : JsObject, IDisposable
     {
         private object _provider;
         private object _connectionString;
@@ -124,13 +124,13 @@ namespace BlendedJS.Sql
 
         public object query(object sql, object parameters)
         {
-            return query(new Object(new Dictionary<string, object>()
+            return query(new JsObject(new Dictionary<string, object>()
             {
                 { "sql", sql },
                 { "parameters", parameters }
             }));
         }
-
+         
         public object query(object sqlOrOptions)
         {
             using (var reader = ExecuteReader(sqlOrOptions))
@@ -145,7 +145,7 @@ namespace BlendedJS.Sql
 
         public object cursor(object sql, object parameters)
         {
-            return cursor(new Object(new Dictionary<string, object>()
+            return cursor(new JsObject(new Dictionary<string, object>()
             {
                 { "sql", sql },
                 { "parameters", parameters }
@@ -193,7 +193,7 @@ namespace BlendedJS.Sql
         {
             while (reader.Read())
             {
-                var item = new Object();
+                var item = new JsObject();
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
                     object value = reader.GetValue(i);

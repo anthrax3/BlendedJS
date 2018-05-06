@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BlendedJS.Mongo
 {
-    public class UpdateResult : BaseObject
+    public class UpdateResult : JsObject
     {
         public UpdateResult(MongoDB.Driver.UpdateResult mongoUpdateResult)
         {

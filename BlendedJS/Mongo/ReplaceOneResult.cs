@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BlendedJS.Mongo
 {
-    public class ReplaceOneResult : BaseObject
+    public class ReplaceOneResult : JsObject
     {
         public ReplaceOneResult(MongoDB.Driver.ReplaceOneResult mongoUpdateResult)
         {

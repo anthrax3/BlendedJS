@@ -191,6 +191,19 @@ namespace BlendedJS
             return bsonDocument;
         }
 
+        public static bool HasProperty(this object obj, string key)
+        {
+            if (obj == null)
+                return false;
+
+            var dictionary = obj as IDictionary<string, object>;
+            if (dictionary != null)
+            {
+                return dictionary.Any(x => x.Key.Equals(key));
+            }
+            return false;
+        }
+
         public static object GetProperty(this object obj, string key)
         {
             if (obj == null)
@@ -219,7 +232,7 @@ namespace BlendedJS
 
         public static IDictionary<string, object> ToJsObject(this IDictionary<string, object> dictionary)
         {
-            return new Object(dictionary);
+            return new JsObject(dictionary);
         }
 
         public static object MapDotNetType(this object obj)
