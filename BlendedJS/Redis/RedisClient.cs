@@ -9,91 +9,483 @@ using StackExchange.Redis;
 
 namespace BlendedJS.Redis
 {
+    //https://redis.io/commands
     public class RedisClient : JsObject, IDisposable
     {
         private IDatabase _db;
+        private IServer _server;
 
-        public RedisClient()
+        public RedisClient(string url)
         {
             BlendedJSEngine.Clients.Value.Add(this);
 
-            //https://www.tutorialspoint.com/redis/redis_keys.htm
-            //redis://redistogo:d4c6bc6e459b596471cfbb8c2f1e73b5@porgy.redistogo.com:10545
-            ConfigurationOptions options = ConfigurationOptions.Parse("porgy.redistogo.com:10545,ssl=true,name=redistogo,password=d4c6bc6e459b596471cfbb8c2f1e73b5");
-
-            //redis://h:p7d22f3439a2b9210fe68c043b61936b22b9fcfaf499c6b9e5c48088ec7291c86@ec2-52-18-191-147.eu-west-1.compute.amazonaws.com:12209
-            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("ec2-52-18-191-147.eu-west-1.compute.amazonaws.com:12209,name=h,password=p7d22f3439a2b9210fe68c043b61936b22b9fcfaf499c6b9e5c48088ec7291c86");
+            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(url);
             _db = redis.GetDatabase();
         }
 
-        public bool KeyDelete(RedisKey key, CommandFlags flags = CommandFlags.None)
+        public object del(params object[] keys)
         {
-            return _db.KeyDelete(key, flags);
+            return _db.KeyDelete(SelectManyKeys(keys));
         }
 
-        public long KeyDelete(RedisKey[] keys, CommandFlags flags = CommandFlags.None)
+        public object dump(object key)
         {
-            return _db.KeyDelete(keys, flags);
+            return _db.KeyDump(key.ToStringOrDefault()).ToJsObject();
         }
 
-        public byte[] KeyDump(RedisKey key, CommandFlags flags = CommandFlags.None)
+        public object exists(params object[] keys)
         {
-            return _db.KeyDump(key, flags);
+            return SelectManyKeys(keys).All(x => _db.KeyExists(x)) ? 1 : 0;
         }
 
-        public bool KeyExists(string key)
+        public object expire(object key)
         {
-            return _db.KeyExists(key);
+            return _db.KeyExpire(key.ToStringOrDefault(), (TimeSpan?)null) ? 1 : 0;
         }
 
-        public bool KeyExists(RedisKey key, CommandFlags flags = CommandFlags.None)
+        public object expire(object key, object seconds)
         {
-            return _db.KeyExists(key, flags);
+            return _db.KeyExpire(key.ToStringOrDefault(), TimeSpan.FromSeconds(seconds.ToIntOrDefault(0))) ? 1 : 0;
         }
 
-        public bool KeyExpire(RedisKey key, TimeSpan? expiry, CommandFlags flags = CommandFlags.None)
+        public object expireat(object key, object dateTime)
         {
-            return _db.KeyExpire(key, expiry, flags);
+            return _db.KeyExpire(key.ToStringOrDefault(), dateTime.ToToDateTimeFromUnixTimeStamp()) ? 1 : 0;
         }
 
-        public bool KeyExpire(RedisKey key, DateTime? expiry, CommandFlags flags = CommandFlags.None)
+        public object pexpire(object key, object miliseconds)
         {
-            return _db.KeyExpire(key, expiry, flags);
+            return _db.KeyExpire(key.ToStringOrDefault(), TimeSpan.FromMilliseconds(miliseconds.ToIntOrDefault(0))) ? 1 : 0;
         }
 
-        public bool KeyMove(RedisKey key, int database, CommandFlags flags = CommandFlags.None)
+        public object pexpireat(object key, object dateTime)
         {
-            return _db.KeyMove(key, database, flags);
+            return _db.KeyExpire(key.ToStringOrDefault(), dateTime.ToToDateTimeFromUnixTimeStampInMiliSeconds()) ? 1 : 0;
         }
 
-        public bool KeyPersist(RedisKey key, CommandFlags flags = CommandFlags.None)
+        public object keys(object pattern)
         {
-            return _db.KeyPersist(key, flags);
+            throw new Exception("method not implemented");
         }
 
-        public RedisKey KeyRandom(CommandFlags flags = CommandFlags.None)
+        public object keys(object key, object endpoint)
         {
-            return _db.KeyRandom(flags);
+            throw new Exception("method not implemented");
         }
 
-        public bool KeyRename(RedisKey key, RedisKey newKey, When when = When.Always, CommandFlags flags = CommandFlags.None)
+        public object move(object key, object database)
         {
-            return _db.KeyRename(key, newKey, when, flags);
+            var databaseValue = database.ToIntOrDefault();
+            if (databaseValue.HasValue == false)
+                throw new Exception("database has to be provided and has to be number");
+
+            return _db.KeyMove(key.ToStringOrDefault(), databaseValue.Value) ? 1 : 0;
         }
 
-        public void KeyRestore(RedisKey key, byte[] value, TimeSpan? expiry = null, CommandFlags flags = CommandFlags.None)
+        public object persist(object key)
         {
-            _db.KeyRestore(key, value, expiry, flags);
+            return _db.KeyPersist(key.ToStringOrDefault()) ? 1 : 0;
         }
 
-        public TimeSpan? KeyTimeToLive(RedisKey key, CommandFlags flags = CommandFlags.None)
+        public object pttl(object key)
         {
-            return _db.KeyTimeToLive(key, flags);
+            var ttl = _db.KeyTimeToLive(key.ToStringOrDefault());
+            if (ttl.HasValue)
+                return ttl.Value.TotalMilliseconds;
+            return -1;
         }
 
-        public RedisType KeyType(RedisKey key, CommandFlags flags = CommandFlags.None)
+        public object randomkey()
         {
-            return _db.KeyType(key, flags);
+            return _db.KeyRandom().ToStringOrDefault();
+        }
+
+        public object rename(object key, object newKey)
+        {
+            return _db.KeyRename(key.ToStringOrDefault(), newKey.ToStringOrDefault()) ? 1 : 0;
+        }
+
+        public object renamenx(object key, object newKey)
+        {
+            return _db.KeyRename(key.ToStringOrDefault(), newKey.ToStringOrDefault(), When.NotExists) ? 1 : 0;
+        }
+
+        public void restore(object key, object value)
+        {
+            _db.KeyRestore(key.ToStringOrDefault(), value.ToByteArray());
+        }
+
+        public void restore(object key, object expire, object value)
+        {
+            _db.KeyRestore(key.ToStringOrDefault(), value.ToByteArray(), TimeSpan.FromSeconds(value.ToDoubleOrDefault(0)));
+        }
+
+        public object sort(params object[] attributes)
+        {
+            var key = attributes.ElementAtOrDefault(0).ToStringOrDefault();
+            Order order = Order.Ascending;
+            SortType sortType = SortType.Numeric;
+            long skip = 0;
+            long take = -1;
+            RedisValue by = default(RedisValue);
+            List<RedisValue> get = new List<RedisValue>();
+            for (int i = 0; i < attributes.Length; i++)
+            {
+                if (string.Equals(attributes[i].ToStringOrDefault(), "DESC", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    order = Order.Descending;
+                }
+                if (string.Equals(attributes[i].ToStringOrDefault(), "ALPHA", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    sortType = SortType.Alphabetic;
+                }
+                if (string.Equals(attributes[i].ToStringOrDefault(), "LIMIT", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    skip = attributes.ElementAtOrDefault(i + 1).ToLongOrDefault(0);
+                    take = attributes.ElementAtOrDefault(i + 2).ToLongOrDefault(-1);
+                }
+                if (string.Equals(attributes[i].ToStringOrDefault(), "BY", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    by = attributes.ElementAtOrDefault(i + 1).ToStringOrDefault();
+                }
+                if (string.Equals(attributes[i].ToStringOrDefault(), "GET", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    string val = attributes.ElementAtOrDefault(i + 1).ToStringOrDefault();
+                    if (string.IsNullOrEmpty(val) == false)
+                        get.Add(val);
+                }
+            }
+
+            return _db
+                .Sort(key,
+                    skip: skip,
+                    take: skip,
+                    order: order,
+                    sortType: sortType,
+                    by: by,
+                    get: get.ToArray())
+                .Select(x => x.ToJsObject())
+                .ToArray();
+        }
+
+        public object touch(object key)
+        {
+            throw new Exception("method not implemented");
+        }
+
+        public object ttl(object key)
+        {
+            var ttl = _db.KeyTimeToLive(key.ToStringOrDefault());
+            if (ttl.HasValue)
+                return ttl.Value.TotalSeconds.ToIntOrDefault();
+            return -1;
+        }
+
+        public object type(object key)
+        {
+            return _db.KeyType(key.ToStringOrDefault()).ToString();
+        }
+
+        public object unlink(object key)
+        {
+            throw new Exception("method not implemented");
+        }
+
+        public object wait()
+        {
+            throw new Exception("method not implemented");
+        }
+
+        public object scan()
+        {
+            throw new Exception("method not implemented");
+        }
+
+        public void set(object key, object value)
+        {
+            _db.StringSet(key.ToStringOrDefault(), value.ToStringOrDefault());
+        }
+
+        public object get(object key)
+        {
+            return _db.StringGet(key.ToStringOrDefault()).ToJsObject();
+        }
+
+        public object getset(object key, object value)
+        {
+            return _db.StringGetSet(key.ToStringOrDefault(), value.ToStringOrDefault()).ToJsObject();
+        }
+
+        public object setex(object key, object seconds, object value)
+        {
+            return _db.StringSet(key.ToStringOrDefault(), value.ToStringOrDefault(), TimeSpan.FromSeconds(seconds.ToIntOrDefault(0))) ? 1 : 0;
+        }
+
+        public object psetex(object key, object miliSeconds, object value)
+        {
+            return _db.StringSet(key.ToStringOrDefault(), value.ToStringOrDefault(), TimeSpan.FromMilliseconds(miliSeconds.ToIntOrDefault(0))) ? 1 : 0;
+        }
+
+        public object setnx(object key, object value)
+        {
+            return _db.StringSet(key.ToStringOrDefault(), value.ToStringOrDefault(), null, When.NotExists) ? 1 : 0;
+        }
+
+        public object setrange(object key, object offset, object value)
+        {
+            var offsetValue = offset.ToLongOrDefault();
+            if (offsetValue.HasValue == false)
+                throw new Exception("offset has to be provided");
+
+            return _db.StringSetRange(key.ToStringOrDefault(), offsetValue.Value, value.ToStringOrDefault()).ToJsObject();
+        }
+
+        public object getrange(object key, object start, object end)
+        {
+            var startValue = start.ToLongOrDefault();
+            if (startValue.HasValue == false)
+                throw new Exception("start has to be provided");
+
+            var endValue = end.ToLongOrDefault();
+            if (endValue.HasValue == false)
+                throw new Exception("end has to be provided");
+
+            return _db.StringGetRange(key.ToStringOrDefault(), startValue.Value, endValue.Value).ToJsObject();
+        }
+
+        public object mset(params object[] keys)
+        {
+            keys = SelectMany(keys);
+
+            if (keys != null)
+            {
+                List<KeyValuePair<RedisKey, RedisValue>> keyValueList = new List<KeyValuePair<RedisKey, RedisValue>>();
+
+                for(int i = 0; i < keys.Length-1; i = i + 2)
+                {
+                    keyValueList.Add(
+                        new KeyValuePair<RedisKey, RedisValue>(
+                            (RedisKey)keys[i].ToStringOrDefault(), 
+                            (RedisValue)keys[i + 1].ToStringOrDefault()));
+                }
+                return _db.StringSet(keyValueList.ToArray()) ? 1 : 0;
+            }
+
+            return null;
+        }
+
+        public object msetnx(params object[] keys)
+        {
+            keys = SelectMany(keys);
+
+            if (keys != null)
+            {
+                List<KeyValuePair<RedisKey, RedisValue>> keyValueList = new List<KeyValuePair<RedisKey, RedisValue>>();
+
+                for (int i = 0; i < keys.Length - 1; i = i + 2)
+                {
+                    keyValueList.Add(
+                        new KeyValuePair<RedisKey, RedisValue>(
+                            (RedisKey)keys[i].ToStringOrDefault(),
+                            (RedisValue)keys[i + 1].ToStringOrDefault()));
+                }
+                return _db.StringSet(keyValueList.ToArray(), When.NotExists) ? 1 : 0;
+            }
+
+            return null;
+        }
+
+        public object[] mget(params object[] keys)
+        {
+            if (keys != null)
+            {
+                if (keys.Length == 1 && keys[0] is object[])
+                {
+                    keys = (object[])keys[0];
+                }
+            }
+
+            if (keys != null)
+            {
+                var keysArray = ((object[])keys).Select(x => (RedisKey)x.ToStringOrDefault()).ToArray();
+                return _db.StringGet(keysArray).Select(x => x.ToJsObject()).ToArray();
+            }
+
+            return null;
+        }
+
+        public object setbit(object key, object offset, object bit)
+        {
+            var offsetValue = offset.ToLongOrDefault();
+            if (offsetValue.HasValue == false)
+                throw new Exception("offset has to be provided");
+
+            var bitValue = bit.ToBoolOrDefault();
+            if (bitValue.HasValue == false)
+                throw new Exception("bit has to be provided");
+            
+            return _db.StringSetBit(key.ToStringOrDefault(), offsetValue.Value, bitValue.Value) ? 1 : 0;
+        }
+
+        public object getbit(object key, object offset)
+        {
+            var offsetValue = offset.ToLongOrDefault();
+            if (offsetValue.HasValue == false)
+                throw new Exception("offset has to be provided");
+
+            return _db.StringGetBit(key.ToStringOrDefault(), offsetValue.Value) ? 1 : 0;
+        }
+
+        public object bitcount(object key)
+        {
+            return _db.StringBitCount(key.ToStringOrDefault());
+        }
+
+        public object bitcount(object key, object start)
+        {
+            return _db.StringBitCount(key.ToStringOrDefault(), start.ToLongOrDefault(1));
+        }
+
+        public object bitcount(object key, object start, object end)
+        {
+            return _db.StringBitCount(key.ToStringOrDefault(), start.ToLongOrDefault(1), end.ToLongOrDefault(-1));
+        }
+
+        public object bitpos(object key, object bit)
+        {
+            var bitValue = bit.ToBoolOrDefault();
+            if (bitValue.HasValue == false)
+                throw new Exception("bit has to be provided");
+
+            return _db.StringBitPosition(key.ToStringOrDefault(), bitValue.Value);
+        }
+
+        public object bitpos(object key, object bit, object start)
+        {
+            var bitValue = bit.ToBoolOrDefault();
+            if (bitValue.HasValue == false)
+                throw new Exception("bit has to be provided");
+
+            return _db.StringBitPosition(key.ToStringOrDefault(), bitValue.Value, start.ToLongOrDefault(1));
+        }
+
+        public object bitpos(object key, object bit, object start, object end)
+        {
+            var bitValue = bit.ToBoolOrDefault();
+            if (bitValue.HasValue == false)
+                throw new Exception("bit has to be provided");
+
+            return _db.StringBitPosition(key.ToStringOrDefault(), bitValue.Value, start.ToLongOrDefault(1), end.ToLongOrDefault(-1));
+        }
+
+        public object strlen(object key)
+        {
+            return _db.StringLength(key.ToStringOrDefault());
+        }
+
+        public object incr(object key)
+        {
+            return _db.StringIncrement(key.ToStringOrDefault());
+        }
+
+        public object incrby(object key, object value)
+        {
+            var valueValue = value.ToLongOrDefault();
+            if (valueValue.HasValue == false)
+                throw new Exception("value has to be provided");
+
+            return _db.StringIncrement(key.ToStringOrDefault(), valueValue.Value);
+        }
+
+        public object incrbyfloat(object key, object value)
+        {
+            var valueValue = value.ToDoubleOrDefault();
+            if (valueValue.HasValue == false)
+                throw new Exception("value has to be provided");
+
+            return _db.StringIncrement(key.ToStringOrDefault(), valueValue.Value);
+        }
+
+        public object decr(object key)
+        {
+            return _db.StringDecrement(key.ToStringOrDefault());
+        }
+
+        public object decrby(object key, object value)
+        {
+            var valueValue = value.ToLongOrDefault();
+            if (valueValue.HasValue == false)
+                throw new Exception("value has to be provided");
+
+            return _db.StringDecrement(key.ToStringOrDefault(), valueValue.Value);
+        }
+
+        public object decrbyfloat(object key, object value)
+        {
+            var valueValue = value.ToDoubleOrDefault();
+            if (valueValue.HasValue == false)
+                throw new Exception("value has to be provided");
+
+            return _db.StringDecrement(key.ToStringOrDefault(), valueValue.Value);
+        }
+
+        public object append(object key, object value)
+        {
+            return _db.StringAppend(key.ToStringOrDefault(), value.ToStringOrDefault());
+        }
+
+        public void hset(object key, object hashField, object value)
+        {
+            _db.HashSet(key.ToStringOrDefault(), hashField.ToStringOrDefault(), value.ToStringOrDefault());
+        }
+
+        public object hget(object key, object hashField)
+        {
+            return _db.HashGet(key.ToStringOrDefault(), hashField.ToStringOrDefault());
+        }
+
+        public object hgetall(object key)
+        {
+            return _db.HashGetAll(key.ToStringOrDefault());
+        }
+
+        //public void hset(object key, object value)
+        //{
+        //    _db.HashSet(key.ToStringOrDefault(), value.ToStringOrDefault());
+        //}
+
+        public object[] SelectMany(object[] keys)
+        {
+            if (keys != null)
+            {
+                return keys
+                    .SelectMany(x =>
+                    {
+                        if (x is object[])
+                            return (object[])x;
+                        else
+                            return new object[1] { x };
+                    })
+                    .ToArray();
+            }
+            return null;
+        }
+
+        public RedisKey[] SelectManyKeys(object[] keys)
+        {
+            if (keys != null)
+            {
+                return keys
+                    .SelectMany(x =>
+                    {
+                        if (x is object[])
+                            return ((object[])x).Select(z => (RedisKey)z.ToStringOrDefault());
+                        else
+                            return new RedisKey[1] { (RedisKey)x.ToStringOrDefault() };
+                    })
+                    .ToArray();
+            }
+            return null;
         }
 
         public void Dispose()

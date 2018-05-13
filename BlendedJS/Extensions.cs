@@ -8,6 +8,8 @@ using MongoDB.Bson.Serialization;
 using BlendedJS.Mongo;
 using BlendedJS.Types;
 using System.Collections;
+using StackExchange.Redis;
+using System.Text;
 
 namespace BlendedJS
 {
@@ -65,6 +67,9 @@ namespace BlendedJS
             if (obj is int)
                 return (int)obj;
 
+            if (obj is double doubleValue)
+                return Convert.ToInt32(doubleValue);
+
             int value = 0;
             if (int.TryParse(obj.ToString(), out value))
                 return value;
@@ -80,12 +85,53 @@ namespace BlendedJS
             if (obj is int)
                 return (int)obj;
 
+            if (obj is double doubleValue)
+                return Convert.ToInt32(doubleValue);
+
             int value = 0;
             if (int.TryParse(obj.ToString(), out value))
                 return value;
             else
                 return defaultValue;
         }
+
+
+        public static long ToLongOrDefault(this object obj, long defaultValue)
+        {
+            if (obj == null)
+                return defaultValue;
+
+            if (obj is int)
+                return (int)obj;
+
+            if (obj is long)
+                return (long)obj;
+
+            int value = 0;
+            if (int.TryParse(obj.ToString(), out value))
+                return value;
+            else
+                return defaultValue;
+        }
+
+        public static long? ToLongOrDefault(this object obj)
+        {
+            if (obj == null)
+                return null;
+
+            if (obj is int)
+                return (int)obj;
+
+            if (obj is long)
+                return (long)obj;
+
+            int value = 0;
+            if (int.TryParse(obj.ToString(), out value))
+                return value;
+            else
+                return null;
+        }
+
 
         public static bool? ToBoolOrDefault(this object obj)
         {
@@ -95,8 +141,14 @@ namespace BlendedJS
             if (obj is bool)
                 return (bool)obj;
 
+            var str = obj.ToString();
+            if (str == "0")
+                return false;
+            if (str == "1")
+                return true;
+
             bool value = false;
-            if (bool.TryParse(obj.ToString(), out value))
+            if (bool.TryParse(str, out value))
                 return value;
             else
                 return null;
@@ -110,14 +162,20 @@ namespace BlendedJS
             if (obj is bool)
                 return (bool)obj;
 
+            var str = obj.ToString();
+            if (str == "0")
+                return false;
+            if (str == "1")
+                return true;
+
             bool value = false;
-            if (bool.TryParse(obj.ToString(), out value))
+            if (bool.TryParse(str, out value))
                 return value;
             else
                 return defaultValue;
         }
 
-        public static DateTime? ToDateOrDefault(this object obj, DateTime? defaultValue)
+        public static DateTime ToDateOrDefault(this object obj, DateTime defaultValue)
         {
             if (obj == null)
                 return defaultValue;
@@ -127,6 +185,101 @@ namespace BlendedJS
 
             DateTime value;
             if (DateTime.TryParseExact(obj.ToString(), "yyyy-MM-dd", CultureInfo.CurrentCulture, DateTimeStyles.None, out value))
+                return value;
+            else
+                return defaultValue;
+        }
+
+        public static DateTime? ToDateOrDefault(this object obj)
+        {
+            if (obj == null)
+                return null;
+
+            if (obj is DateTime)
+                return (DateTime)obj;
+
+            DateTime value;
+            if (DateTime.TryParseExact(obj.ToString(), "yyyy-MM-dd", CultureInfo.CurrentCulture, DateTimeStyles.None, out value))
+                return value;
+            else
+                return null;
+        }
+
+        public static DateTime ToDateTimeOrDefault(this object obj, DateTime defaultValue)
+        {
+            if (obj == null)
+                return defaultValue;
+
+            if (obj is DateTime)
+                return (DateTime)obj;
+
+            DateTime value;
+            if (DateTime.TryParseExact(obj.ToString(), "yyyy-MM-dd", CultureInfo.CurrentCulture, DateTimeStyles.None, out value))
+                return value;
+            else
+                return defaultValue;
+        }
+
+        public static DateTime? ToDateTimeOrDefault(this object obj)
+        {
+            if (obj == null)
+                return null;
+
+            if (obj is DateTime)
+                return (DateTime)obj;
+
+            DateTime value;
+            if (DateTime.TryParseExact(obj.ToString(), "yyyy-MM-dd", CultureInfo.CurrentCulture, DateTimeStyles.None, out value))
+                return value;
+            else
+                return null;
+        }
+
+        public static TimeSpan? ToTimeSpanOrDefault(this object obj)
+        {
+            return ToTimeSpanOrDefault(obj, null);
+        }
+
+        public static TimeSpan? ToTimeSpanOrDefault(this object obj, TimeSpan? defaultValue)
+        {
+            if (obj == null)
+                return defaultValue;
+
+            if (obj is TimeSpan)
+                return (TimeSpan)obj;
+
+            TimeSpan value;
+            if (TimeSpan.TryParse(obj.ToString(), out value))
+                return value;
+            else
+                return defaultValue;
+        }
+
+        public static double? ToDoubleOrDefault(this object obj)
+        {
+            if (obj == null)
+                return null;
+
+            if (obj is double)
+                return (double)obj;
+
+            double value = 0;
+            if (double.TryParse(obj.ToString(), out value))
+                return value;
+            else
+                return null;
+        }
+
+        public static double ToDoubleOrDefault(this object obj, double defaultValue)
+        {
+            if (obj == null)
+                return defaultValue;
+
+            if (obj is double)
+                return (double)obj;
+
+            double value = 0;
+            if (double.TryParse(obj.ToString(), out value))
                 return value;
             else
                 return defaultValue;
@@ -146,6 +299,35 @@ namespace BlendedJS
                 return null;
 
             return obj.ToString();
+        }
+
+        public static DateTime ToToDateTimeFromUnixTimeStamp(this object unixTimeStamp)
+        {
+            if (unixTimeStamp is DateTime)
+                return (DateTime)unixTimeStamp;
+
+            // Unix timestamp is seconds past epoch
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp.ToDoubleOrDefault(0)).ToLocalTime();
+            return dtDateTime;
+        }
+
+        public static DateTime ToToDateTimeFromUnixTimeStampInMiliSeconds(this object unixTimeStamp)
+        {
+            if (unixTimeStamp is DateTime)
+                return (DateTime)unixTimeStamp;
+
+            // Unix timestamp is seconds past epoch
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddMilliseconds(unixTimeStamp.ToDoubleOrDefault(0)).ToLocalTime();
+            return dtDateTime;
+        }
+
+        public static byte[] ToByteArray(this object obj)
+        {
+            if (obj is byte[] byteArray)
+                return byteArray;
+            return Encoding.ASCII.GetBytes(obj.ToStringOrDefault());
         }
 
         public static string ToJsonOrString(this object obj)
@@ -252,9 +434,30 @@ namespace BlendedJS
                         .Cast<DictionaryEntry>()
                         .ToDictionary(x => x.Key.ToString(), x => x.Value));
             }
+            if (obj is byte[])
+            {
+                return new String(
+                    ((byte[])obj)
+                    .Select(x => (char)x)
+                    .ToArray());
+            }
             if (obj is MongoDB.Bson.BsonDocument bson)
             {
                 return new JsObject(bson.ToDictionary());
+            }
+            if (obj is RedisValue redisValue)
+            {
+                if (redisValue.IsInteger)
+                    return (int)redisValue;
+                if (redisValue.HasValue == false)
+                    return null;
+                if (redisValue.IsNull)
+                    return null;
+                if (redisValue.IsNullOrEmpty)
+                    return null;
+                
+
+                return redisValue.ToStringOrDefault();
             }
             return obj;
         }
