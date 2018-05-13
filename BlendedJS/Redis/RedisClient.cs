@@ -297,14 +297,7 @@ namespace BlendedJS.Redis
 
         public object[] mget(params object[] keys)
         {
-            if (keys != null)
-            {
-                if (keys.Length == 1 && keys[0] is object[])
-                {
-                    keys = (object[])keys[0];
-                }
-            }
-
+            keys = SelectMany(keys);
             if (keys != null)
             {
                 var keysArray = ((object[])keys).Select(x => (RedisKey)x.ToStringOrDefault()).ToArray();
@@ -434,19 +427,107 @@ namespace BlendedJS.Redis
             return _db.StringAppend(key.ToStringOrDefault(), value.ToStringOrDefault());
         }
 
-        public void hset(object key, object hashField, object value)
+        public object hset(object key, object hashField, object value)
         {
-            _db.HashSet(key.ToStringOrDefault(), hashField.ToStringOrDefault(), value.ToStringOrDefault());
+            return _db.HashSet(key.ToStringOrDefault(), hashField.ToStringOrDefault(), value.ToStringOrDefault()) ? 1 : 0;
         }
 
         public object hget(object key, object hashField)
         {
-            return _db.HashGet(key.ToStringOrDefault(), hashField.ToStringOrDefault());
+            return _db.HashGet(key.ToStringOrDefault(), hashField.ToStringOrDefault()).ToJsObject();
+        }
+
+        public object hdel(object key, object hashField)
+        {
+            return _db.HashDelete(key.ToStringOrDefault(), hashField.ToStringOrDefault()) ? 1 : 0;
+        }
+
+        public object hincrby(object key, object hashField, object value)
+        {
+            var valueDouble = value.ToDoubleOrDefault();
+            if (valueDouble.HasValue == false)
+                throw new Exception("value has to be provided and has to be number");
+
+            return _db.HashIncrement(key.ToStringOrDefault(), hashField.ToStringOrDefault(), valueDouble.Value);
+        }
+
+        public object hdecrby(object key, object hashField, object value)
+        {
+            var valueDouble = value.ToDoubleOrDefault();
+            if (valueDouble.HasValue == false)
+                throw new Exception("value has to be provided and has to be number");
+
+            return _db.HashDecrement(key.ToStringOrDefault(), hashField.ToStringOrDefault(), valueDouble.Value);
+        }
+
+        public object hincrbyfloat(object key, object hashField, object value)
+        {
+            var valueDouble = value.ToDoubleOrDefault();
+            if (valueDouble.HasValue == false)
+                throw new Exception("value has to be provided and has to be number");
+
+            return _db.HashIncrement(key.ToStringOrDefault(), hashField.ToStringOrDefault(), valueDouble.Value);
+        }
+
+        public object hdecrbyfloat(object key, object hashField, object value)
+        {
+            var valueDouble = value.ToDoubleOrDefault();
+            if (valueDouble.HasValue == false)
+                throw new Exception("value has to be provided and has to be number");
+
+            return _db.HashDecrement(key.ToStringOrDefault(), hashField.ToStringOrDefault(), valueDouble.Value);
+        }
+
+        public object hkeys(object key)
+        {
+            return _db.HashKeys(key.ToStringOrDefault()).Select(x => x.ToJsObject()).ToArray();
+        }
+
+        public object hlen(object key)
+        {
+            return _db.HashLength(key.ToStringOrDefault());
+        }
+
+        public object hmget(params object[] keys)
+        {
+            keys = SelectMany(keys);
+            var key = keys.ElementAtOrDefault(0).ToStringOrDefault();
+            var fields = keys.Skip(1).Select(x => (RedisValue)x.ToStringOrDefault()).ToArray();
+            return _db.HashGet(key, fields).Select(x => x.ToJsObject()).ToArray();
+        }
+
+        public void hmset(params object[] keys)
+        {
+            keys = SelectMany(keys);
+            var key = keys.ElementAtOrDefault(0).ToStringOrDefault();
+            List<HashEntry> keyValueList = new List<HashEntry>();
+            if (keys != null)
+            {
+                for (int i = 1; i < keys.Length - 1; i = i + 2)
+                {
+                    keyValueList.Add(new HashEntry(
+                        (RedisValue)keys[i].ToStringOrDefault(),
+                        (RedisValue)keys[i + 1].ToStringOrDefault()
+                        ));
+                }
+            }
+
+            _db.HashSet(key, keyValueList.ToArray());
+        }
+
+        public object hexists(object key, object hashField)
+        {
+            return _db.HashExists(key.ToStringOrDefault(), hashField.ToStringOrDefault()) ? 1 : 0;
         }
 
         public object hgetall(object key)
         {
-            return _db.HashGetAll(key.ToStringOrDefault());
+            JsObject obj = new JsObject();
+            foreach(var entry in _db.HashGetAll(key.ToStringOrDefault()))
+            {
+                obj[entry.Name.ToStringOrDefault()] = entry.Value.ToStringOrDefault();
+            }
+            return obj;
         }
 
         //public void hset(object key, object value)

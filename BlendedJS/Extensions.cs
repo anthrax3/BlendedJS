@@ -459,6 +459,7 @@ namespace BlendedJS
 
                 return redisValue.ToStringOrDefault();
             }
+
             return obj;
         }
 
