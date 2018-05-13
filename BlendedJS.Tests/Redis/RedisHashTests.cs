@@ -232,5 +232,80 @@ namespace BlendedJS.Tests.Redis
             }
         }
 
+        [TestMethod]
+        public void HSet()
+        {
+            using (BlendedJSEngine engine = new BlendedJSEngine())
+            {
+                engine.Jint.SetValue("testRedisUrl", _testRedisUrl);
+
+                var result = engine.ExecuteScript(@"
+                    var redis = new RedisClient(this.testRedisUrl);
+                    redis.hdel('myhash', 'field1');
+                    redis.hset('myhash', 'field1', 'Hello');
+                ");
+
+                System.Console.WriteLine(result.ConsoleTest);
+                Assert.AreEqual(1, (double)result.Value);
+            }
+        }
+
+        [TestMethod]
+        public void HSetNx()
+        {
+            using (BlendedJSEngine engine = new BlendedJSEngine())
+            {
+                engine.Jint.SetValue("testRedisUrl", _testRedisUrl);
+
+                var result = engine.ExecuteScript(@"
+                    var redis = new RedisClient(this.testRedisUrl);
+                    redis.hdel('myhash', 'field1');
+                    redis.hset('myhash', 'field1', 'Hello');
+                    redis.hsetnx('myhash', 'field1', 'World');
+                ");
+
+                System.Console.WriteLine(result.ConsoleTest);
+                Assert.AreEqual(0, (double)result.Value);
+            }
+        }
+
+        [TestMethod]
+        public void HStrLen()
+        {
+            using (BlendedJSEngine engine = new BlendedJSEngine())
+            {
+                engine.Jint.SetValue("testRedisUrl", _testRedisUrl);
+
+                var result = engine.ExecuteScript(@"
+                    var redis = new RedisClient(this.testRedisUrl);
+                    redis.hmset('myhash', 'f1', 'HelloWorld', 'f2', 99, 'f3', -256);
+                    redis.hstrlen('myhash', 'f1');
+                ");
+
+                System.Console.WriteLine(result.ConsoleTest);
+                Assert.AreEqual(10, (double)result.Value);
+            }
+        }
+
+        [TestMethod]
+        public void HVals()
+        {
+            using (BlendedJSEngine engine = new BlendedJSEngine())
+            {
+                engine.Jint.SetValue("testRedisUrl", _testRedisUrl);
+
+                var result = engine.ExecuteScript(@"
+                    var redis = new RedisClient(this.testRedisUrl);
+                    redis.hset('myhash', 'field1', 'Hello');
+                    redis.hset('myhash', 'field2', 'World');
+                    redis.hvals('myhash');
+                ");
+
+                System.Console.WriteLine(result.ConsoleTest);
+                Assert.AreEqual("World", ((object[])result.Value)[0]);
+                Assert.AreEqual("Hello", ((object[])result.Value)[1]);
+            }
+        }
+
     }
 }

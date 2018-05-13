@@ -437,6 +437,11 @@ namespace BlendedJS.Redis
             return _db.HashGet(key.ToStringOrDefault(), hashField.ToStringOrDefault()).ToJsObject();
         }
 
+        public object hsetnx(object key, object hashField, object value)
+        {
+            return _db.HashSet(key.ToStringOrDefault(), hashField.ToStringOrDefault(), value.ToStringOrDefault(), When.NotExists) ? 1 : 0;
+        }
+
         public object hdel(object key, object hashField)
         {
             return _db.HashDelete(key.ToStringOrDefault(), hashField.ToStringOrDefault()) ? 1 : 0;
@@ -530,10 +535,13 @@ namespace BlendedJS.Redis
             return obj;
         }
 
-        //public void hset(object key, object value)
-        //{
-        //    _db.HashSet(key.ToStringOrDefault(), value.ToStringOrDefault());
-        //}
+        public object hvals(object key)
+        {
+            return 
+                _db.HashValues(key.ToStringOrDefault())
+                .Select(x => x.ToJsObject())
+                .ToArray();
+        }
 
         public object[] SelectMany(object[] keys)
         {
