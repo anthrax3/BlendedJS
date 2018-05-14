@@ -543,6 +543,121 @@ namespace BlendedJS.Redis
                 .ToArray();
         }
 
+        public object rpush(params object[] prameters)
+        {
+            prameters = SelectMany(prameters);
+            var key = prameters.ElementAtOrDefault(0).ToStringOrDefault();
+            var values = prameters.Skip(1).Select(x => (RedisValue)x.ToStringOrDefault()).ToArray();
+            return _db.ListRightPush(key.ToStringOrDefault(), values);
+        }
+
+        public object rpushx(params object[] prameters)
+        {
+            prameters = SelectMany(prameters);
+            var key = prameters.ElementAtOrDefault(0).ToStringOrDefault();
+            var value = prameters.ElementAtOrDefault(1).ToStringOrDefault();
+            return _db.ListRightPush(key.ToStringOrDefault(), value, When.Exists);
+        }
+
+        public object rpop(object key)
+        {
+            return _db.ListRightPop(key.ToStringOrDefault()).ToJsObject();
+        }
+
+        public object lpush(params object[] paramters)
+        {
+            paramters = SelectMany(paramters);
+            var key = paramters.ElementAtOrDefault(0).ToStringOrDefault();
+            var values = paramters.Skip(1).Select(x => (RedisValue)x.ToStringOrDefault()).ToArray();
+            return _db.ListLeftPush(key.ToStringOrDefault(), values);
+        }
+
+        public object lpushx(params object[] prameters)
+        {
+            prameters = SelectMany(prameters);
+            var key = prameters.ElementAtOrDefault(0).ToStringOrDefault();
+            var value = prameters.ElementAtOrDefault(1).ToStringOrDefault();
+            return _db.ListLeftPush(key.ToStringOrDefault(), value, When.Exists);
+        }
+
+        public object lpop(object key)
+        {
+            return _db.ListLeftPop(key.ToStringOrDefault()).ToJsObject();
+        }
+
+        public object lindex(object key, object index)
+        {
+            var indexValue = index.ToLongOrDefault();
+            if (indexValue.HasValue == false)
+                throw new Exception("index has to be provided and has to be number.");
+            return _db.ListGetByIndex(key.ToStringOrDefault(), indexValue.Value).ToJsObject();
+        }
+
+        public object linsert(params object[] paramters)
+        {
+            var key = paramters.ElementAtOrDefault(0).ToStringOrDefault();
+            var action = paramters.ElementAtOrDefault(1).ToStringOrDefault();
+            var privatev = paramters.ElementAtOrDefault(2).ToStringOrDefault();
+            var value = paramters.ElementAtOrDefault(3).ToStringOrDefault();
+            if (string.Equals("after", action, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return _db.ListInsertAfter(key, privatev.ToStringOrDefault(), value.ToStringOrDefault());
+            }
+            if (string.Equals("before", action, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return _db.ListInsertBefore(key, privatev.ToStringOrDefault(), value.ToStringOrDefault());
+            }
+            throw new Exception("second argument has to be after or before");
+        }
+
+        public object lrange(params object[] keys)
+        {
+            var key = keys.ElementAtOrDefault(0).ToStringOrDefault();
+            var start = keys.ElementAtOrDefault(1).ToLongOrDefault(0);
+            var stop = keys.ElementAtOrDefault(2).ToLongOrDefault(-1);
+            return _db.ListRange(key, start, stop).Select(x => x.ToJsObject()).ToArray();
+        }
+
+        public object llen(object key)
+        {
+            return _db.ListLength(key.ToStringOrDefault());
+        }
+
+        public object lrem(params object[] paramters)
+        {
+            var key = paramters.ElementAtOrDefault(0).ToStringOrDefault();
+            var count = paramters.ElementAtOrDefault(1).ToLongOrDefault(0);
+            var value = paramters.ElementAtOrDefault(2).ToStringOrDefault();
+            return _db.ListRemove(key, value, count).ToJsObject();
+        }
+
+        public void lset(params object[] paramters)
+        {
+            var key = paramters.ElementAtOrDefault(0).ToStringOrDefault();
+            var index = paramters.ElementAtOrDefault(1).ToLongOrDefault(0);
+            var value = paramters.ElementAtOrDefault(2).ToStringOrDefault();
+            _db.ListSetByIndex(key, index, value);
+        }
+
+        public void ltrim(params object[] paramters)
+        {
+            var key = paramters.ElementAtOrDefault(0).ToStringOrDefault();
+            var start = paramters.ElementAtOrDefault(1).ToLongOrDefault();
+            if (start.HasValue == false)
+                throw new Exception("start has to be provided and be number");
+            var stop = paramters.ElementAtOrDefault(2).ToLongOrDefault();
+            if (stop.HasValue == false)
+                throw new Exception("stop has to be provided and be number");
+            _db.ListTrim(key, start.Value, stop.Value);
+        }
+
+        public object rpoplpush(params object[] paramters)
+        {
+            var source = paramters.ElementAtOrDefault(0).ToStringOrDefault();
+            var destination = paramters.ElementAtOrDefault(1).ToStringOrDefault();
+            return _db.ListRightPopLeftPush(source, destination).ToJsObject();
+        }
+
         public object[] SelectMany(object[] keys)
         {
             if (keys != null)
